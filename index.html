@@ -564,20 +564,21 @@ window.addEventListener('DOMContentLoaded', function() {
 
 // ── CHARGEMENT DATA SE ────────────────────────────────────────────────────────
 function loadCollections() {
-  var url = 'https://kvstore.streamelements.com/v2/channel/' + SE_CHANNEL_ID + '/customWidget.' + SE_STORE_KEY;
+  // Lit le fichier JSON directement depuis GitHub (public, pas besoin d'auth)
+  var url = 'https://raw.githubusercontent.com/Wanups/plushbox/main/collections.json?t=' + Date.now();
   fetch(url)
     .then(function(r) {
       if (!r.ok) throw new Error('HTTP ' + r.status);
       return r.json();
     })
     .then(function(data) {
-      allCollections = data && data.value ? data.value : (data || {});
+      allCollections = data || {};
       userCollection = allCollections[username] || {};
       render();
     })
     .catch(function(e) {
       console.error('Erreur chargement:', e);
-      showError('Impossible de charger la collection.', 'Vérifie que le widget Plush Box est actif sur le stream.');
+      showError('Collection introuvable.', 'Ouvre d\'abord une Plush Box sur le stream !');
     });
 }
 
