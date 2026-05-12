@@ -664,22 +664,24 @@ window.addEventListener('DOMContentLoaded', function() {
 
 // ── CHARGEMENT DATA SE ────────────────────────────────────────────────────────
 function loadCollections() {
-  // Lit le fichier JSON directement depuis GitHub (public, pas besoin d'auth)
-  var url = 'https://raw.githubusercontent.com/Wanups/plushbox/main/collections.json?t=' + Date.now();
-  fetch(url)
-    .then(function(r) {
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      return r.json();
-    })
-    .then(function(data) {
-      allCollections = data || {};
-      userCollection = allCollections[username] || {};
-      render();
-    })
-    .catch(function(e) {
-      console.error('Erreur chargement:', e);
-      showError('Collection introuvable.', 'Ouvre d\'abord une Plush Box sur le stream !');
-    });
+  var baseUrl = 'https://raw.githubusercontent.com/Wanups/plushbox/main/';
+  Promise.all([
+    fetch(baseUrl + 'collections.json?t=' + Date.now()).then(function(r){return r.json();}),
+    fetch(baseUrl + 'plushies.json?t=' + Date.now()).then(function(r){return r.json();})
+  ])
+  .then(function(results) {
+    allCollections = results[0] || {};
+    userCollection = allCollections[username] || {};
+    // Remplace la liste des peluches par celle du fichier (avec les vraies images)
+    if (Array.isArray(results[1]) && results[1].length > 0) {
+      PLUSHIES = results[1];
+    }
+    render();
+  })
+  .catch(function(e) {
+    console.error('Erreur chargement:', e);
+    showError('Collection introuvable.', 'Ouvre une Plush Box sur le stream !');
+  });
 }
 
 // ── CALCUL SCORE ──────────────────────────────────────────────────────────────
