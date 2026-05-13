@@ -520,6 +520,7 @@ function renderGrid(filter) {
   var content  = document.getElementById('main-content');
   var rarities = ['legendary','epic','rare','common'];
   var html     = '';
+  filteredPlushies = []; // On réinitialise la liste filtrée
 
   rarities.forEach(function(rarity) {
     var list = PLUSHIES.filter(function(p) { return p.rarity === rarity; });
@@ -528,6 +529,9 @@ function renderGrid(filter) {
     if (filter === 'missing') list = list.filter(function(p) { return !userCollection[p.id]; });
     if (filter !== 'all' && filter !== 'owned' && filter !== 'missing' && filter !== rarity) return;
     if (list.length === 0) return;
+
+    // On ajoute les peluches de cette rareté à la liste filtrée pour la navigation
+    filteredPlushies = filteredPlushies.concat(list);
 
     var ownedInRarity = list.filter(function(p) { return userCollection[p.id]; }).length;
 
@@ -566,20 +570,24 @@ function renderGrid(filter) {
 
 // ── MODALE ────────────────────────────────────────────────────────────────────
 function openModalById(plushId) {
-  var idx = PLUSHIES.findIndex(function(p) { return p.id === plushId; });
+  var idx = filteredPlushies.findIndex(function(p) { return p.id === plushId; });
   if (idx !== -1) updateModalContent(idx);
 }
 
 function navigatePlush(direction) {
+  if (filteredPlushies.length === 0) return;
+  
   var newIdx = currentPlushIdx + direction;
-  if (newIdx < 0) newIdx = PLUSHIES.length - 1;
-  if (newIdx >= PLUSHIES.length) newIdx = 0;
+  if (newIdx < 0) newIdx = filteredPlushies.length - 1;
+  if (newIdx >= filteredPlushies.length) newIdx = 0;
   updateModalContent(newIdx);
 }
 
 function updateModalContent(idx) {
   currentPlushIdx = idx;
-  var plush = PLUSHIES[idx];
+  var plush = filteredPlushies[idx];
+  if (!plush) return;
+
   var count  = userCollection[plush.id] || 0;
   var locked = count === 0;
   var modal  = document.getElementById('plush-modal');
