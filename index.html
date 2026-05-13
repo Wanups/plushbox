@@ -189,19 +189,16 @@
 
     .plush-card:hover { transform: translateY(-4px); border-color: var(--silver-dark); background: var(--bg3); }
 
-    /* SILHOUETTE LOGIC - Exact Rarity Colors */
-    .plush-card.locked .plush-img-wrap { filter: grayscale(1) contrast(0); } /* Force black silhouette base */
-    
-    .plush-card.locked.common .plush-img    { filter: drop-shadow(0 0 0 #888); opacity: 0.15; }
-    .plush-card.locked.rare .plush-img      { filter: drop-shadow(0 0 0 #60a5fa); opacity: 0.18; }
-    .plush-card.locked.epic .plush-img      { filter: drop-shadow(0 0 0 #c084fc); opacity: 0.18; }
-    .plush-card.locked.legendary .plush-img { filter: drop-shadow(0 0 0 var(--gold)); opacity: 0.25; }
+    /* SILHOUETTE LOGIC - Classic Light Gray */
+    .plush-card.locked .plush-img {
+      filter: grayscale(1) brightness(0.4);
+      opacity: 0.5;
+    }
 
-    /* Emojis silhouettes */
-    .plush-card.locked.common .plush-emoji    { color: #888; filter: blur(12px); opacity: 0.2; }
-    .plush-card.locked.rare .plush-emoji      { color: #60a5fa; filter: blur(12px); opacity: 0.25; }
-    .plush-card.locked.epic .plush-emoji      { color: #c084fc; filter: blur(12px); opacity: 0.25; }
-    .plush-card.locked.legendary .plush-emoji { color: var(--gold); filter: blur(12px); opacity: 0.35; }
+    .plush-card.locked .plush-emoji {
+      filter: grayscale(1) blur(12px);
+      opacity: 0.15;
+    }
 
     .plush-card.locked .plush-name { opacity: 0.5; letter-spacing: 4px; }
 
