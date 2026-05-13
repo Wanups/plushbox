@@ -441,11 +441,12 @@ var RARITY_POINTS = { common:1, rare:5, epic:20, legendary:100 };
 var RARITY_COLORS = { common:'#9ca3af', rare:'#60a5fa', epic:'#c084fc', legendary:'#fbbf24' };
 
 var PLUSHIES = [];
+var filteredPlushies = []; // Liste des peluches actuellement affichées
 var allCollections = {};
 var userCollection = {};
 var currentFilter  = 'all';
 var username       = '';
-var currentPlushIdx = -1;
+var currentPlushIdx = -1; // Index dans filteredPlushies
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', function() {
