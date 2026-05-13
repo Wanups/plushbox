@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plush Box — Classement Global</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --silver: #c8c8c8;
+      --silver-light: #e8e8e8;
+      --silver-dark: #8a8a8a;
+      --gold: #d4a853;
+      --bg: #0a0a0a;
+      --bg2: #111111;
+      --bg3: #1a1a1a;
+      --border: rgba(200,200,200,0.12);
+      --text: #e8e8e8;
+      --text2: #888;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 300;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.5;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+      position: relative;
+      z-index: 1;
+    }
+
+    header {
+      padding: 60px 0 40px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 48px;
+    }
+
+    .header-eyebrow {
+      font-size: 10px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--silver-dark);
+      margin-bottom: 16px;
+    }
+
+    .header-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(36px, 6vw, 64px);
+      font-weight: 300;
+      letter-spacing: 8px;
+      text-transform: uppercase;
+      color: #f0f0f0;
+      line-height: 1;
+      text-decoration: none;
+      display: block;
+    }
+
+    .header-line {
+      width: 80px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--silver), transparent);
+      margin: 20px auto;
+    }
+
+    .header-subtitle {
+      font-size: 13px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--silver);
+    }
+
+    .nav-links {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+
+    .nav-link {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text2);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-link:hover { color: var(--silver); }
+
+    /* TABLE STYLES */
+    .leaderboard-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      animation: fadeIn 0.8s ease both;
+    }
+
+    .leaderboard-table th {
+      text-align: left;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text2);
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 500;
+    }
+
+    .leaderboard-table td {
+      padding: 20px 16px;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+
+    .rank-cell { width: 60px; font-family: 'Cormorant Garamond', serif; font-size: 20px; color: var(--silver-dark); }
+    .viewer-cell { font-weight: 500; letter-spacing: 1px; }
+    .viewer-cell a { color: inherit; text-decoration: none; transition: color 0.2s; }
+    .viewer-cell a:hover { color: var(--gold); }
+    
+    .stat-cell { text-align: right; font-family: 'Cormorant Garamond', serif; font-size: 22px; }
+    .points-cell { color: var(--gold); font-weight: 600; font-size: 24px; }
+
+    .rank-1 { color: var(--gold); font-size: 24px; }
+    .rank-2 { color: #e5e7eb; font-size: 22px; }
+    .rank-3 { color: #b45309; font-size: 20px; }
+
+    .loading { text-align: center; padding: 100px 20px; }
+    .loading-spinner { width: 32px; height: 32px; border: 1px solid var(--border); border-top-color: var(--silver); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px; }
+    .loading-text { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--text2); }
+
+    .empty-state { text-align: center; padding: 80px 20px; }
+    .empty-state-title { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 300; color: var(--text2); margin-bottom: 12px; }
+
+    footer { text-align: center; padding-top: 40px; border-top: 1px solid var(--border); margin-top: 80px; }
+    .footer-text { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--text2); opacity: 0.5; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 600px) {
+      .leaderboard-table th:nth-child(3), 
+      .leaderboard-table td:nth-child(3) { display: none; }
+      .container { padding: 0 16px 40px; }
+      .leaderboard-table td { padding: 16px 8px; font-size: 13px; }
+      .rank-cell { width: 40px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div class="header-eyebrow">Classement Global</div>
+    <a href="index.html" class="header-logo">Plush Box</a>
+    <div class="header-line"></div>
+    <div class="header-subtitle">Meilleurs Collectionneurs</div>
+  </header>
+
+  <div id="main-content">
+    <div class="loading">
+      <div class="loading-spinner"></div>
+      <div class="loading-text">Calcul du classement</div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-text">Plush Box · Mystery Collection · WANUPS</div>
+  </footer>
+</div>
+
+<script>
+// ── CONFIG ────────────────────────────────────────────────────────────────────
+var GITHUB_USER = 'Wanups';
+var GITHUB_REPO = 'plushbox';
+var RARITY_POINTS = { common:1, rare:5, epic:20, legendary:100 };
+
+var PLUSHIES = [];
+var allCollections = {};
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', function() {
+  loadData();
+});
+
+function loadData() {
+  var baseUrl = 'https://raw.githubusercontent.com/' + GITHUB_USER + '/' + GITHUB_REPO + '/main/';
+  Promise.all([
+    fetch(baseUrl + 'collections.json?t=' + Date.now()).then(function(r){return r.json();}),
+    fetch(baseUrl + 'plushies.json?t=' + Date.now()).then(function(r){return r.json();})
+  ])
+  .then(function(results) {
+    allCollections = results[0] || {};
+    PLUSHIES = results[1] || [];
+    renderLeaderboard();
+  })
+  .catch(function(e) {
+    console.error('Erreur chargement:', e);
+    document.getElementById('main-content').innerHTML = 
+      '<div class="empty-state"><div class="empty-state-title">Erreur lors du chargement des données.</div></div>';
+  });
+}
+
+function renderLeaderboard() {
+  var leaderboard = [];
+
+  Object.keys(allCollections).forEach(function(username) {
+    var coll = allCollections[username];
+    var uniquePlushies = 0;
+    var totalBoxes = 0;
+    var totalPoints = 0;
+
+    PLUSHIES.forEach(function(p) {
+      var count = coll[p.id] || 0;
+      if (count > 0) {
+        uniquePlushies++;
+        totalBoxes += count;
+        totalPoints += count * (RARITY_POINTS[p.rarity] || 1);
+      }
+    });
+
+    if (totalBoxes > 0) {
+      leaderboard.push({
+        username: username,
+        boxes: totalBoxes,
+        unique: uniquePlushies,
+        points: totalPoints
+      });
+    }
+  });
+
+  // Tri par points, puis par uniques, puis par boites
+  leaderboard.sort(function(a, b) {
+    if (b.points !== a.points) return b.points - a.points;
+    if (b.unique !== a.unique) return b.unique - a.unique;
+    return b.boxes - a.boxes;
+  });
+
+  if (leaderboard.length === 0) {
+    document.getElementById('main-content').innerHTML = 
+      '<div class="empty-state"><div class="empty-state-title">Aucun collectionneur pour le moment.</div></div>';
+    return;
+  }
+
+  var html = '<table class="leaderboard-table">';
+  html += '<thead><tr>' +
+    '<th>Pos</th>' +
+    '<th>Collectionneur</th>' +
+    '<th style="text-align:right">Boites</th>' +
+    '<th style="text-align:right">Uniques</th>' +
+    '<th style="text-align:right">Points</th>' +
+    '</tr></thead><tbody>';
+
+  leaderboard.forEach(function(entry, i) {
+    var rankClass = (i === 0) ? 'rank-1' : (i === 1) ? 'rank-2' : (i === 2) ? 'rank-3' : '';
+    var displayName = entry.username.charAt(0).toUpperCase() + entry.username.slice(1);
+    var profileUrl = 'index.html?user=' + encodeURIComponent(entry.username);
+
+    html += '<tr>' +
+      '<td class="rank-cell ' + rankClass + '">' + (i + 1) + '</td>' +
+      '<td class="viewer-cell"><a href="' + profileUrl + '">' + displayName + '</a></td>' +
+      '<td class="stat-cell">' + entry.boxes + '</td>' +
+      '<td class="stat-cell">' + entry.unique + '</td>' +
+      '<td class="stat-cell points-cell">' + entry.points.toLocaleString() + '</td>' +
+      '</tr>';
+  });
+
+  html += '</tbody></table>';
+  document.getElementById('main-content').innerHTML = html;
+}
+</script>
+</body>
+</html>
