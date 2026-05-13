@@ -189,22 +189,19 @@
 
     .plush-card:hover { transform: translateY(-4px); border-color: var(--silver-dark); background: var(--bg3); }
 
-    /* SILHOUETTE LOGIC */
-    .plush-card.locked .plush-img, .plush-card.locked .plush-emoji {
-      transition: all 0.3s;
-    }
+    /* SILHOUETTE LOGIC - Exact Rarity Colors */
+    .plush-card.locked .plush-img-wrap { filter: grayscale(1) contrast(0); } /* Force black silhouette base */
+    
+    .plush-card.locked.common .plush-img    { filter: drop-shadow(0 0 0 #888); opacity: 0.15; }
+    .plush-card.locked.rare .plush-img      { filter: drop-shadow(0 0 0 #60a5fa); opacity: 0.18; }
+    .plush-card.locked.epic .plush-img      { filter: drop-shadow(0 0 0 #c084fc); opacity: 0.18; }
+    .plush-card.locked.legendary .plush-img { filter: drop-shadow(0 0 0 var(--gold)); opacity: 0.25; }
 
-    /* Teintes pour les silhouettes (images) */
-    .plush-card.locked.common .plush-img    { filter: brightness(0) invert(1) sepia(1) saturate(0) brightness(0.05); opacity: 0.6; }
-    .plush-card.locked.rare .plush-img      { filter: brightness(0) invert(1) sepia(1) hue-rotate(180deg) saturate(8) brightness(0.08); opacity: 0.8; }
-    .plush-card.locked.epic .plush-img      { filter: brightness(0) invert(1) sepia(1) hue-rotate(240deg) saturate(8) brightness(0.08); opacity: 0.8; }
-    .plush-card.locked.legendary .plush-img { filter: brightness(0) invert(1) sepia(1) hue-rotate(-5deg) saturate(8) brightness(0.12); opacity: 0.9; }
-
-    /* Teintes pour les silhouettes (emojis) */
-    .plush-card.locked.common .plush-emoji    { filter: blur(12px) brightness(0) invert(1) sepia(1) saturate(0) brightness(0.05); opacity: 0.1; }
-    .plush-card.locked.rare .plush-emoji      { filter: blur(12px) brightness(0) invert(1) sepia(1) hue-rotate(180deg) saturate(8) brightness(0.08); opacity: 0.15; }
-    .plush-card.locked.epic .plush-emoji      { filter: blur(12px) brightness(0) invert(1) sepia(1) hue-rotate(240deg) saturate(8) brightness(0.08); opacity: 0.15; }
-    .plush-card.locked.legendary .plush-emoji { filter: blur(12px) brightness(0) invert(1) sepia(1) hue-rotate(-5deg) saturate(8) brightness(0.12); opacity: 0.2; }
+    /* Emojis silhouettes */
+    .plush-card.locked.common .plush-emoji    { color: #888; filter: blur(12px); opacity: 0.2; }
+    .plush-card.locked.rare .plush-emoji      { color: #60a5fa; filter: blur(12px); opacity: 0.25; }
+    .plush-card.locked.epic .plush-emoji      { color: #c084fc; filter: blur(12px); opacity: 0.25; }
+    .plush-card.locked.legendary .plush-emoji { color: var(--gold); filter: blur(12px); opacity: 0.35; }
 
     .plush-card.locked .plush-name { opacity: 0.5; letter-spacing: 4px; }
 
