@@ -237,6 +237,17 @@
     .plush-rarity.rare      { color: #60a5fa; }
     .plush-rarity.common    { color: var(--text2); }
 
+    .plush-number { 
+      position: absolute; 
+      top: 8px; 
+      left: 8px; 
+      font-size: 10px; 
+      font-weight: 600; 
+      color: var(--text2); 
+      letter-spacing: 1px;
+      opacity: 0.6;
+    }
+
     .plush-count { 
       position: absolute; 
       top: 6px; 
@@ -566,6 +577,7 @@ function renderGrid(filter) {
     list.forEach(function(p, i) {
       var count   = userCollection[p.id] || 0;
       var locked  = count === 0 ? 'locked' : '';
+      var numStr  = p.number ? '#' + p.number.toString().padStart(3, '0') : '';
       
       var imgHtml = p.image && p.image !== ''
         ? '<img class="plush-img" src="' + p.image + '" alt="' + p.name + '" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\'">'
@@ -573,6 +585,7 @@ function renderGrid(filter) {
         : '<div class="plush-emoji">' + p.emoji + '</div>';
 
       html += '<div class="plush-card ' + rarity + ' ' + locked + '" style="animation-delay:' + (i * 0.02) + 's" onclick="openModalById(\'' + p.id + '\')">';
+      if (numStr) html += '<div class="plush-number">' + numStr + '</div>';
       if (count > 1) html += '<div class="plush-count">×' + count + '</div>';
       html += '<div class="plush-img-wrap">' + imgHtml + '</div>';
       html += '<div class="plush-name">' + (locked ? '???????' : p.name) + '</div>';
@@ -623,6 +636,7 @@ function updateModalContent(idx) {
     : '<div class="modal-emoji">' + plush.emoji + '</div>';
 
   var name   = locked ? 'Mystère' : plush.name;
+  var numStr = plush.number ? '#' + plush.number.toString().padStart(3, '0') : '';
   var rarity = RARITY_LABELS[plush.rarity];
   var desc   = locked 
     ? "Cette peluche n'a pas encore rejoint ta collection. Continue d'ouvrir des boites pour la découvrir !" 
@@ -630,7 +644,7 @@ function updateModalContent(idx) {
 
   body.innerHTML = 
     '<div class="modal-img-wrap">' + imgHtml + '</div>' +
-    '<div class="modal-rarity" style="color:' + RARITY_COLORS[plush.rarity] + '">' + rarity + '</div>' +
+    '<div class="modal-rarity" style="color:' + RARITY_COLORS[plush.rarity] + '">' + rarity + ' ' + numStr + '</div>' +
     '<div class="modal-name">' + name + '</div>' +
     '<div class="modal-desc">' + desc + '</div>';
 
