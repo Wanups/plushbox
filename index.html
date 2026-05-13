@@ -191,17 +191,19 @@
 
     /* SILHOUETTE LOGIC */
     .plush-card.locked .plush-img {
-      filter: brightness(0); /* Transforme en silhouette noire */
-      opacity: 0.6;
+      filter: brightness(0);
+      opacity: 0.8;
+      transition: filter 0.3s;
     }
-    .plush-card.locked .plush-emoji {
-      filter: blur(8px);
-      opacity: 0.2;
-    }
-    .plush-card.locked .plush-name {
-      opacity: 0.5;
-      letter-spacing: 4px;
-    }
+
+    /* Teintes subtiles pour les silhouettes sur la grille */
+    .plush-card.locked.common .plush-img    { filter: brightness(0) sepia(1) hue-rotate(180deg) saturate(0.2) brightness(0.2); }
+    .plush-card.locked.rare .plush-img      { filter: brightness(0) sepia(1) hue-rotate(190deg) saturate(2) brightness(0.3); }
+    .plush-card.locked.epic .plush-img      { filter: brightness(0) sepia(1) hue-rotate(240deg) saturate(2) brightness(0.3); }
+    .plush-card.locked.legendary .plush-img { filter: brightness(0) sepia(1) hue-rotate(10deg) saturate(3) brightness(0.4); }
+
+    .plush-card.locked .plush-emoji { filter: blur(12px) grayscale(1); opacity: 0.15; }
+    .plush-card.locked .plush-name { opacity: 0.5; letter-spacing: 4px; }
 
     .plush-card.legendary { border-color: rgba(212,168,83,0.3); }
     .plush-card.epic      { border-color: rgba(192,132,252,0.2); }
@@ -248,11 +250,11 @@
     .modal-overlay.active { opacity: 1; pointer-events: auto; }
 
     .modal-content {
-      max-width: 700px; /* Plus large */
+      max-width: 700px;
       width: 100%;
       background: var(--bg2);
       border: 1px solid var(--border);
-      padding: 60px 40px; /* Plus de padding */
+      padding: 60px 40px;
       position: relative;
       text-align: center;
       transform: translateY(20px);
@@ -295,19 +297,24 @@
     .modal-nav.next { right: -70px; }
 
     .modal-img-wrap {
-      width: 320px; /* Plus grand */
-      height: 320px; /* Plus grand */
+      width: 320px;
+      height: 320px;
       margin: 0 auto 40px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
-    .modal-img { max-width: 100%; max-height: 100%; object-fit: contain; transform: scale(1.2); }
+    .modal-img { max-width: 100%; max-height: 100%; object-fit: contain; transform: scale(1.2); transition: filter 0.3s; }
     .modal-emoji { font-size: 180px; }
 
-    /* Silhouette dans la modale */
-    .modal-content.locked .modal-img { filter: brightness(0); opacity: 0.8; }
-    .modal-content.locked .modal-emoji { filter: blur(20px); opacity: 0.1; }
+    /* Teintes silhouettes dans la modale */
+    .modal-content.locked .modal-img { opacity: 0.9; }
+    .modal-content.locked.common .modal-img    { filter: brightness(0) sepia(1) hue-rotate(180deg) saturate(0.2) brightness(0.2); }
+    .modal-content.locked.rare .modal-img      { filter: brightness(0) sepia(1) hue-rotate(190deg) saturate(2) brightness(0.35); }
+    .modal-content.locked.epic .modal-img      { filter: brightness(0) sepia(1) hue-rotate(240deg) saturate(2) brightness(0.35); }
+    .modal-content.locked.legendary .modal-img { filter: brightness(0) sepia(1) hue-rotate(10deg) saturate(3) brightness(0.45); }
+    
+    .modal-content.locked .modal-emoji { filter: blur(30px); opacity: 0.1; }
 
     .modal-rarity {
       font-size: 11px;
@@ -317,7 +324,7 @@
     }
     .modal-name {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 42px; /* Plus grand */
+      font-size: 42px;
       font-weight: 300;
       letter-spacing: 6px;
       text-transform: uppercase;
@@ -590,7 +597,7 @@ function updateModalContent(idx) {
     : '<div class="modal-emoji">' + plush.emoji + '</div>';
 
   var name   = locked ? 'Mystère' : plush.name;
-  var rarity = RARITY_LABELS[plush.rarity]; // Toujours afficher la rareté
+  var rarity = RARITY_LABELS[plush.rarity];
   var desc   = locked 
     ? "Cette peluche n'a pas encore rejoint ta collection. Continue d'ouvrir des boites pour la découvrir !" 
     : "Félicitations ! Tu possèdes cette peluche en <b>" + count + "</b> exemplaire(s).";
@@ -622,7 +629,5 @@ function showError(title, sub) {
     '<div class="empty-state"><div class="empty-state-title">' + title + '</div><div class="empty-state-sub">' + sub + '</div></div>';
 }
 </script>
-</body>
-</html>
 </body>
 </html>
