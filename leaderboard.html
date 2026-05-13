@@ -140,7 +140,7 @@
     .stat-cell { text-align: right; font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 300; }
     .points-cell { color: var(--gold); font-weight: 500; font-size: 32px; }
 
-    .rank-1 { color: var(--gold); font-size: 99px; }
+    .rank-1 { color: var(--gold); font-size: 36px; }
     .rank-2 { color: #e5e7eb; font-size: 32px; }
     .rank-3 { color: #b45309; font-size: 28px; }
 
@@ -159,10 +159,22 @@
 
     @media (max-width: 600px) {
       .leaderboard-table th:nth-child(3), 
-      .leaderboard-table td:nth-child(3) { display: none; }
-      .container { padding: 0 16px 40px; }
-      .leaderboard-table td { padding: 16px 8px; font-size: 13px; }
-      .rank-cell { width: 40px; }
+      .leaderboard-table td:nth-child(3) { display: none; } /* On cache les Boites sur mobile */
+      
+      .container { padding: 0 12px 40px; }
+      header { padding: 40px 0 20px; margin-bottom: 24px; }
+      
+      .leaderboard-table td { padding: 12px 4px; }
+      .rank-cell { width: 30px; font-size: 18px; }
+      .rank-1 { font-size: 24px; }
+      .rank-2 { font-size: 22px; }
+      .rank-3 { font-size: 20px; }
+      
+      .viewer-cell { font-size: 13px; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .stat-cell { font-size: 18px; }
+      .points-cell { font-size: 20px; }
+      
+      .leaderboard-table th { padding: 12px 4px; font-size: 8px; letter-spacing: 1px; }
     }
   </style>
 </head>
