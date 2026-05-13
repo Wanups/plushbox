@@ -235,7 +235,7 @@
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.95);
+      background: rgba(0,0,0,0.98);
       z-index: 1000;
       display: flex;
       align-items: center;
@@ -248,11 +248,11 @@
     .modal-overlay.active { opacity: 1; pointer-events: auto; }
 
     .modal-content {
-      max-width: 500px;
+      max-width: 700px; /* Plus large */
       width: 100%;
       background: var(--bg2);
       border: 1px solid var(--border);
-      padding: 40px;
+      padding: 60px 40px; /* Plus de padding */
       position: relative;
       text-align: center;
       transform: translateY(20px);
@@ -267,45 +267,67 @@
       background: transparent;
       border: none;
       color: var(--text2);
-      font-size: 24px;
+      font-size: 28px;
       cursor: pointer;
       padding: 10px;
+      z-index: 10;
     }
 
+    .modal-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      color: var(--text);
+      width: 50px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 24px;
+      user-select: none;
+    }
+    .modal-nav:hover { background: rgba(255,255,255,0.1); border-color: var(--silver); }
+    .modal-nav.prev { left: -70px; }
+    .modal-nav.next { right: -70px; }
+
     .modal-img-wrap {
-      width: 240px;
-      height: 240px;
-      margin: 0 auto 30px;
+      width: 320px; /* Plus grand */
+      height: 320px; /* Plus grand */
+      margin: 0 auto 40px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
-    .modal-img { max-width: 100%; max-height: 100%; object-fit: contain; }
-    .modal-emoji { font-size: 140px; }
+    .modal-img { max-width: 100%; max-height: 100%; object-fit: contain; transform: scale(1.2); }
+    .modal-emoji { font-size: 180px; }
 
     /* Silhouette dans la modale */
     .modal-content.locked .modal-img { filter: brightness(0); opacity: 0.8; }
     .modal-content.locked .modal-emoji { filter: blur(20px); opacity: 0.1; }
 
     .modal-rarity {
-      font-size: 10px;
-      letter-spacing: 4px;
+      font-size: 11px;
+      letter-spacing: 5px;
       text-transform: uppercase;
-      margin-bottom: 12px;
+      margin-bottom: 16px;
     }
     .modal-name {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 32px;
+      font-size: 42px; /* Plus grand */
       font-weight: 300;
-      letter-spacing: 4px;
+      letter-spacing: 6px;
       text-transform: uppercase;
-      margin-bottom: 20px;
+      margin-bottom: 24px;
     }
     .modal-desc {
-      font-size: 12px;
+      font-size: 13px;
       color: var(--text2);
       line-height: 1.8;
-      max-width: 300px;
+      max-width: 400px;
       margin: 0 auto;
     }
 
@@ -323,12 +345,18 @@
     @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes spin { to { transform: rotate(360deg); } }
 
+    @media (max-width: 900px) {
+      .modal-nav.prev { left: 10px; border-radius: 0 4px 4px 0; }
+      .modal-nav.next { right: 10px; border-radius: 4px 0 0 4px; }
+    }
+
     @media (max-width: 600px) {
       .stats-bar { gap: 24px; }
       .stat-divider { display: none; }
       .plush-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 8px; }
-      .modal-content { padding: 30px 20px; }
-      .modal-img-wrap { width: 180px; height: 180px; }
+      .modal-content { padding: 40px 20px; }
+      .modal-img-wrap { width: 200px; height: 200px; }
+      .modal-name { font-size: 28px; }
     }
   </style>
 </head>
@@ -390,6 +418,10 @@
 <div id="plush-modal" class="modal-overlay" onclick="closeModal()">
   <div class="modal-content" onclick="event.stopPropagation()">
     <button class="modal-close" onclick="closeModal()">&times;</button>
+    
+    <div class="modal-nav prev" onclick="navigatePlush(-1)">&#10094;</div>
+    <div class="modal-nav next" onclick="navigatePlush(1)">&#10095;</div>
+
     <div id="modal-body">
       <!-- Rempli par JS -->
     </div>
@@ -410,6 +442,7 @@ var allCollections = {};
 var userCollection = {};
 var currentFilter  = 'all';
 var username       = '';
+var currentPlushIdx = -1;
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', function() {
@@ -423,6 +456,14 @@ window.addEventListener('DOMContentLoaded', function() {
 
   document.getElementById('display-username').textContent = username;
   loadCollections();
+
+  // Navigation au clavier
+  window.addEventListener('keydown', function(e) {
+    if (!document.getElementById('plush-modal').classList.contains('active')) return;
+    if (e.key === 'ArrowLeft') navigatePlush(-1);
+    if (e.key === 'ArrowRight') navigatePlush(1);
+    if (e.key === 'Escape') closeModal();
+  });
 });
 
 // ── CHARGEMENT DATA ───────────────────────────────────────────────────────────
@@ -502,7 +543,7 @@ function renderGrid(filter) {
           + '<div class="plush-emoji" style="display:none">' + p.emoji + '</div>'
         : '<div class="plush-emoji">' + p.emoji + '</div>';
 
-      html += '<div class="plush-card ' + rarity + ' ' + locked + '" style="animation-delay:' + (i * 0.02) + 's" onclick="openModal(\'' + p.id + '\')">';
+      html += '<div class="plush-card ' + rarity + ' ' + locked + '" style="animation-delay:' + (i * 0.02) + 's" onclick="openModalById(\'' + p.id + '\')">';
       if (count > 1) html += '<div class="plush-count">×' + count + '</div>';
       html += '<div class="plush-img-wrap">' + imgHtml + '</div>';
       html += '<div class="plush-name">' + (locked ? '???????' : p.name) + '</div>';
@@ -520,11 +561,22 @@ function renderGrid(filter) {
 }
 
 // ── MODALE ────────────────────────────────────────────────────────────────────
-function openModal(plushId) {
-  var plush = PLUSHIES.find(function(p) { return p.id === plushId; });
-  if (!plush) return;
+function openModalById(plushId) {
+  var idx = PLUSHIES.findIndex(function(p) { return p.id === plushId; });
+  if (idx !== -1) updateModalContent(idx);
+}
 
-  var count  = userCollection[plushId] || 0;
+function navigatePlush(direction) {
+  var newIdx = currentPlushIdx + direction;
+  if (newIdx < 0) newIdx = PLUSHIES.length - 1;
+  if (newIdx >= PLUSHIES.length) newIdx = 0;
+  updateModalContent(newIdx);
+}
+
+function updateModalContent(idx) {
+  currentPlushIdx = idx;
+  var plush = PLUSHIES[idx];
+  var count  = userCollection[plush.id] || 0;
   var locked = count === 0;
   var modal  = document.getElementById('plush-modal');
   var content = document.querySelector('.modal-content');
@@ -538,7 +590,7 @@ function openModal(plushId) {
     : '<div class="modal-emoji">' + plush.emoji + '</div>';
 
   var name   = locked ? 'Mystère' : plush.name;
-  var rarity = locked ? 'Rareté Inconnue' : RARITY_LABELS[plush.rarity];
+  var rarity = RARITY_LABELS[plush.rarity]; // Toujours afficher la rareté
   var desc   = locked 
     ? "Cette peluche n'a pas encore rejoint ta collection. Continue d'ouvrir des boites pour la découvrir !" 
     : "Félicitations ! Tu possèdes cette peluche en <b>" + count + "</b> exemplaire(s).";
@@ -570,5 +622,7 @@ function showError(title, sub) {
     '<div class="empty-state"><div class="empty-state-title">' + title + '</div><div class="empty-state-sub">' + sub + '</div></div>';
 }
 </script>
+</body>
+</html>
 </body>
 </html>
