@@ -30,7 +30,6 @@
       min-height: 100vh;
     }
 
-    /* FOND GRAIN */
     body::before {
       content: '';
       position: fixed;
@@ -49,7 +48,6 @@
       z-index: 1;
     }
 
-    /* HEADER */
     header {
       padding: 60px 0 40px;
       text-align: center;
@@ -89,12 +87,8 @@
       color: var(--silver);
     }
 
-    .header-username span {
-      color: #f0f0f0;
-      font-weight: 500;
-    }
+    .header-username span { color: #f0f0f0; font-weight: 500; }
 
-    /* STATS */
     .stats-bar {
       display: flex;
       justify-content: center;
@@ -103,10 +97,7 @@
       flex-wrap: wrap;
     }
 
-    .stat {
-      text-align: center;
-    }
-
+    .stat { text-align: center; }
     .stat-value {
       font-family: 'Cormorant Garamond', serif;
       font-size: 36px;
@@ -114,7 +105,6 @@
       color: #f0f0f0;
       line-height: 1;
     }
-
     .stat-label {
       font-size: 9px;
       letter-spacing: 3px;
@@ -122,14 +112,8 @@
       color: var(--text2);
       margin-top: 6px;
     }
+    .stat-divider { width: 1px; background: var(--border); align-self: stretch; }
 
-    .stat-divider {
-      width: 1px;
-      background: var(--border);
-      align-self: stretch;
-    }
-
-    /* FILTRES */
     .filters {
       display: flex;
       justify-content: center;
@@ -152,8 +136,7 @@
       transition: all 0.2s;
     }
 
-    .filter-btn:hover,
-    .filter-btn.active {
+    .filter-btn:hover, .filter-btn.active {
       border-color: var(--silver);
       color: var(--silver-light);
       background: rgba(200,200,200,0.05);
@@ -163,48 +146,33 @@
     .filter-btn.active.epic      { border-color: #c084fc; color: #c084fc; }
     .filter-btn.active.rare      { border-color: #60a5fa; color: #60a5fa; }
 
-    /* SECTION RARETÉ */
     .rarity-section { margin-bottom: 56px; }
-
     .rarity-header {
       display: flex;
       align-items: center;
       gap: 16px;
       margin-bottom: 24px;
     }
-
-    .rarity-line {
-      flex: 1;
-      height: 1px;
-      background: var(--border);
-    }
-
+    .rarity-line { flex: 1; height: 1px; background: var(--border); }
     .rarity-label {
       font-size: 9px;
       letter-spacing: 3px;
       text-transform: uppercase;
       white-space: nowrap;
     }
-
     .rarity-label.legendary { color: var(--gold); }
     .rarity-label.epic      { color: #c084fc; }
     .rarity-label.rare      { color: #60a5fa; }
     .rarity-label.common    { color: var(--text2); }
 
-    .rarity-count {
-      font-size: 9px;
-      letter-spacing: 2px;
-      color: var(--text2);
-    }
+    .rarity-count { font-size: 9px; letter-spacing: 2px; color: var(--text2); }
 
-    /* GRILLE */
     .plush-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
       gap: 12px;
     }
 
-    /* CARTE PELUCHE */
     .plush-card {
       background: var(--bg2);
       border: 1px solid var(--border);
@@ -214,42 +182,33 @@
       align-items: center;
       gap: 8px;
       position: relative;
-      transition: border-color 0.2s, transform 0.2s;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       animation: fadeIn 0.4s ease both;
+      cursor: pointer;
     }
 
-    .plush-card:hover {
-      transform: translateY(-2px);
-    }
+    .plush-card:hover { transform: translateY(-4px); border-color: var(--silver-dark); background: var(--bg3); }
 
-    .plush-card.locked {
+    /* SILHOUETTE LOGIC */
+    .plush-card.locked .plush-img {
+      filter: brightness(0); /* Transforme en silhouette noire */
+      opacity: 0.6;
+    }
+    .plush-card.locked .plush-emoji {
+      filter: blur(8px);
       opacity: 0.2;
-      filter: grayscale(1);
+    }
+    .plush-card.locked .plush-name {
+      opacity: 0.5;
+      letter-spacing: 4px;
     }
 
     .plush-card.legendary { border-color: rgba(212,168,83,0.3); }
     .plush-card.epic      { border-color: rgba(192,132,252,0.2); }
     .plush-card.rare      { border-color: rgba(96,165,250,0.15); }
 
-    .plush-card.legendary:hover { border-color: rgba(212,168,83,0.7); }
-    .plush-card.epic:hover      { border-color: rgba(192,132,252,0.5); }
-    .plush-card.rare:hover      { border-color: rgba(96,165,250,0.4); }
-
-    /* Halo rareté */
-    .plush-card.legendary::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse at 50% 40%, rgba(212,168,83,0.08) 0%, transparent 70%);
-      pointer-events: none;
-    }
-    .plush-card.epic::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse at 50% 40%, rgba(192,132,252,0.06) 0%, transparent 70%);
-      pointer-events: none;
-    }
+    .plush-card.legendary:hover { border-color: rgba(212,168,83,0.7); box-shadow: 0 10px 30px -10px rgba(212,168,83,0.2); }
+    .plush-card.epic:hover      { border-color: rgba(192,132,252,0.5); box-shadow: 0 10px 30px -10px rgba(192,132,252,0.15); }
 
     .plush-img-wrap {
       width: 80px;
@@ -257,128 +216,125 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: transform 0.3s;
     }
+    .plush-card:hover .plush-img-wrap { transform: scale(1.1); }
 
-    .plush-img {
-      width: 80px;
-      height: 80px;
-      object-fit: contain;
-    }
-
-    .plush-emoji {
-      font-size: 52px;
-      line-height: 1;
-    }
-
-    .plush-name {
-      font-size: 9px;
-      font-weight: 500;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: var(--text);
-      text-align: center;
-      line-height: 1.4;
-    }
-
-    .plush-rarity {
-      font-size: 8px;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-    }
+    .plush-img { width: 80px; height: 80px; object-fit: contain; }
+    .plush-emoji { font-size: 52px; line-height: 1; }
+    .plush-name { font-size: 9px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; color: var(--text); text-align: center; line-height: 1.4; }
+    .plush-rarity { font-size: 8px; letter-spacing: 1.5px; text-transform: uppercase; }
     .plush-rarity.legendary { color: var(--gold); }
     .plush-rarity.epic      { color: #c084fc; }
     .plush-rarity.rare      { color: #60a5fa; }
     .plush-rarity.common    { color: var(--text2); }
 
-    .plush-count {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      font-size: 9px;
-      font-weight: 500;
-      color: var(--text2);
-      letter-spacing: 0.5px;
-    }
+    .plush-count { position: absolute; top: 8px; right: 8px; font-size: 9px; font-weight: 500; color: var(--text2); letter-spacing: 0.5px; }
 
-    /* ETAT VIDE */
-    .empty-state {
+    /* MODAL */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.95);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s;
+      padding: 24px;
+    }
+    .modal-overlay.active { opacity: 1; pointer-events: auto; }
+
+    .modal-content {
+      max-width: 500px;
+      width: 100%;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      padding: 40px;
+      position: relative;
       text-align: center;
-      padding: 80px 20px;
+      transform: translateY(20px);
+      transition: transform 0.4s;
+    }
+    .modal-overlay.active .modal-content { transform: translateY(0); }
+
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: transparent;
+      border: none;
+      color: var(--text2);
+      font-size: 24px;
+      cursor: pointer;
+      padding: 10px;
     }
 
-    .empty-state-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 28px;
-      font-weight: 300;
-      color: var(--text2);
+    .modal-img-wrap {
+      width: 240px;
+      height: 240px;
+      margin: 0 auto 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-img { max-width: 100%; max-height: 100%; object-fit: contain; }
+    .modal-emoji { font-size: 140px; }
+
+    /* Silhouette dans la modale */
+    .modal-content.locked .modal-img { filter: brightness(0); opacity: 0.8; }
+    .modal-content.locked .modal-emoji { filter: blur(20px); opacity: 0.1; }
+
+    .modal-rarity {
+      font-size: 10px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
       margin-bottom: 12px;
     }
-
-    .empty-state-sub {
-      font-size: 11px;
-      letter-spacing: 2px;
-      color: var(--text2);
-      opacity: 0.5;
-    }
-
-    /* LOADING */
-    .loading {
-      text-align: center;
-      padding: 100px 20px;
-    }
-
-    .loading-spinner {
-      width: 32px;
-      height: 32px;
-      border: 1px solid var(--border);
-      border-top-color: var(--silver);
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin: 0 auto 20px;
-    }
-
-    .loading-text {
-      font-size: 10px;
-      letter-spacing: 3px;
+    .modal-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 32px;
+      font-weight: 300;
+      letter-spacing: 4px;
       text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .modal-desc {
+      font-size: 12px;
       color: var(--text2);
+      line-height: 1.8;
+      max-width: 300px;
+      margin: 0 auto;
     }
 
-    /* FOOTER */
-    footer {
-      text-align: center;
-      padding-top: 40px;
-      border-top: 1px solid var(--border);
-      margin-top: 40px;
-    }
+    .empty-state { text-align: center; padding: 80px 20px; }
+    .empty-state-title { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 300; color: var(--text2); margin-bottom: 12px; }
+    .empty-state-sub { font-size: 11px; letter-spacing: 2px; color: var(--text2); opacity: 0.5; }
 
-    .footer-text {
-      font-size: 9px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--text2);
-      opacity: 0.5;
-    }
+    .loading { text-align: center; padding: 100px 20px; }
+    .loading-spinner { width: 32px; height: 32px; border: 1px solid var(--border); border-top-color: var(--silver); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px; }
+    .loading-text { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--text2); }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
+    footer { text-align: center; padding-top: 40px; border-top: 1px solid var(--border); margin-top: 40px; }
+    .footer-text { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--text2); opacity: 0.5; }
 
-    /* RESPONSIVE */
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
     @media (max-width: 600px) {
       .stats-bar { gap: 24px; }
       .stat-divider { display: none; }
       .plush-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 8px; }
+      .modal-content { padding: 30px 20px; }
+      .modal-img-wrap { width: 180px; height: 180px; }
     }
   </style>
 </head>
 <body>
-<div class="container">
 
+<div class="container">
   <header>
     <div class="header-eyebrow">Collection personnelle</div>
     <div class="header-logo">Plush Box</div>
@@ -389,17 +345,17 @@
   <div id="stats-bar" class="stats-bar" style="display:none">
     <div class="stat">
       <div class="stat-value" id="stat-owned">0</div>
-      <div class="stat-label">Peluches obtenues</div>
+      <div class="stat-label">Obtenues</div>
     </div>
     <div class="stat-divider"></div>
     <div class="stat">
       <div class="stat-value" id="stat-total">0</div>
-      <div class="stat-label">Dans la collection</div>
+      <div class="stat-label">Collection</div>
     </div>
     <div class="stat-divider"></div>
     <div class="stat">
       <div class="stat-value" id="stat-score">0</div>
-      <div class="stat-label">Points de rareté</div>
+      <div class="stat-label">Points</div>
     </div>
     <div class="stat-divider"></div>
     <div class="stat">
@@ -428,221 +384,28 @@
   <footer>
     <div class="footer-text">Plush Box · Mystery Collection · Série I</div>
   </footer>
+</div>
 
+<!-- MODALE D'APERÇU -->
+<div id="plush-modal" class="modal-overlay" onclick="closeModal()">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModal()">&times;</button>
+    <div id="modal-body">
+      <!-- Rempli par JS -->
+    </div>
+  </div>
 </div>
 
 <script>
 // ── CONFIG ────────────────────────────────────────────────────────────────────
-var SE_CHANNEL_ID = '59faf4ed63bd690001d39d3b';
-var SE_STORE_KEY  = 'pb_collections';
+var GITHUB_USER = 'Wanups';
+var GITHUB_REPO = 'plushbox';
 
 var RARITY_LABELS = { common:'Commun', rare:'Rare', epic:'Épique', legendary:'Légendaire' };
 var RARITY_POINTS = { common:1, rare:5, epic:20, legendary:100 };
+var RARITY_COLORS = { common:'#9ca3af', rare:'#60a5fa', epic:'#c084fc', legendary:'#fbbf24' };
 
-// Liste des peluches — doit correspondre à PLUSHIES_BASE dans le widget SE
-var PLUSHIES = [
-  { id:'p1',  name:'Ourson Caramel',    emoji:'🐻', rarity:'common'    },
-  { id:'p2',  name:'Lapin Pastel',      emoji:'🐰', rarity:'common'    },
-  { id:'p3',  name:'Poussin Soleil',    emoji:'🐥', rarity:'common'    },
-  { id:'p4',  name:'Souris Grise',      emoji:'🐭', rarity:'common'    },
-  { id:'p5',  name:'Renard Roux',       emoji:'🦊', rarity:'common'    },
-  { id:'p6',  name:'Cochon Rose',       emoji:'🐷', rarity:'common'    },
-  { id:'p7',  name:'Mouton Nuage',      emoji:'🐑', rarity:'common'    },
-  { id:'p8',  name:'Canard Jaune',      emoji:'🐤', rarity:'common'    },
-  { id:'p9',  name:'Chat Roux',         emoji:'🐱', rarity:'common'    },
-  { id:'p10', name:'Chien Caramel',     emoji:'🐶', rarity:'common'    },
-  { id:'p11', name:'Hamster Doré',      emoji:'🐹', rarity:'common'    },
-  { id:'p12', name:'Grenouille Jade',   emoji:'🐸', rarity:'common'    },
-  { id:'p13', name:'Tortue Mignonne',   emoji:'🐢', rarity:'common'    },
-  { id:'p14', name:'Pingouin Bébé',     emoji:'🐧', rarity:'common'    },
-  { id:'p15', name:'Ours Polaire',      emoji:'🐻', rarity:'common'    },
-  { id:'p16', name:'Lapin Gris',        emoji:'🐰', rarity:'common'    },
-  { id:'p17', name:'Poussin Blanc',     emoji:'🐣', rarity:'common'    },
-  { id:'p18', name:'Chaton Tigré',      emoji:'🐱', rarity:'common'    },
-  { id:'p19', name:'Chiot Beige',       emoji:'🐶', rarity:'common'    },
-  { id:'p20', name:'Écureuil Roux',     emoji:'🐿', rarity:'common'    },
-  { id:'p21', name:'Vache Tachetée',    emoji:'🐮', rarity:'common'    },
-  { id:'p22', name:'Porcelet Rose',     emoji:'🐷', rarity:'common'    },
-  { id:'p23', name:'Agneau Blanc',      emoji:'🐑', rarity:'common'    },
-  { id:'p24', name:'Souris Beige',      emoji:'🐭', rarity:'common'    },
-  { id:'p25', name:'Lapin Blanc',       emoji:'🐰', rarity:'common'    },
-  { id:'p26', name:'Oiseau Bleu',       emoji:'🐦', rarity:'common'    },
-  { id:'p27', name:'Canari Jaune',      emoji:'🐤', rarity:'common'    },
-  { id:'p28', name:'Hérisson Brun',     emoji:'🦔', rarity:'common'    },
-  { id:'p29', name:'Bébé Panda',        emoji:'🐼', rarity:'common'    },
-  { id:'p30', name:'Lièvre Arctique',   emoji:'🐰', rarity:'common'    },
-  { id:'p31', name:'Chien Dalmatien',   emoji:'🐶', rarity:'common'    },
-  { id:'p32', name:'Chauve-Souris',     emoji:'🦇', rarity:'common'    },
-  { id:'p33', name:'Hibou Brun',        emoji:'🦉', rarity:'common'    },
-  { id:'p34', name:'Ourson Miel',       emoji:'🐻', rarity:'common'    },
-  { id:'p35', name:'Loup Gris',         emoji:'🐺', rarity:'common'    },
-  { id:'p36', name:'Renard Arctique',   emoji:'🦊', rarity:'common'    },
-  { id:'p37', name:'Chaton Angora',     emoji:'🐱', rarity:'common'    },
-  { id:'p38', name:'Singe Espiègle',    emoji:'🐒', rarity:'common'    },
-  { id:'p39', name:'Zèbre Bébé',        emoji:'🦓', rarity:'common'    },
-  { id:'p40', name:'Éléphant Bébé',     emoji:'🐘', rarity:'common'    },
-  { id:'p41', name:'Girafe Bébé',       emoji:'🦒', rarity:'common'    },
-  { id:'p42', name:'Hippopotame',       emoji:'🦛', rarity:'common'    },
-  { id:'p43', name:'Cerf Tacheté',      emoji:'🦌', rarity:'common'    },
-  { id:'p44', name:'Canard Mandarin',   emoji:'🦆', rarity:'common'    },
-  { id:'p45', name:'Flamant Rose',      emoji:'🦩', rarity:'common'    },
-  { id:'p46', name:'Cigogne Blanche',   emoji:'🦢', rarity:'common'    },
-  { id:'p47', name:'Bélier Montagne',   emoji:'🐏', rarity:'common'    },
-  { id:'p48', name:'Tapir Brun',        emoji:'🐗', rarity:'common'    },
-  { id:'p49', name:'Poussin Jaune',     emoji:'🐥', rarity:'common'    },
-  { id:'p50', name:'Pingouin Empereu',  emoji:'🐧', rarity:'common'    },
-  { id:'p51', name:'Dauphin Bleu',      emoji:'🐬', rarity:'rare'      },
-  { id:'p52', name:'Koala Doux',        emoji:'🐨', rarity:'rare'      },
-  { id:'p53', name:'Raton Laveur',      emoji:'🦝', rarity:'rare'      },
-  { id:'p54', name:'Axolotl Rose',      emoji:'🦎', rarity:'rare'      },
-  { id:'p55', name:'Fennec Désert',     emoji:'🦊', rarity:'rare'      },
-  { id:'p56', name:'Loutre Câline',     emoji:'🦦', rarity:'rare'      },
-  { id:'p57', name:'Castor Bâtisseur',  emoji:'🦫', rarity:'rare'      },
-  { id:'p58', name:'Renard Argenté',    emoji:'🦊', rarity:'rare'      },
-  { id:'p59', name:'Jaguar Tacheté',    emoji:'🐆', rarity:'rare'      },
-  { id:'p60', name:'Loup Blanc',        emoji:'🐺', rarity:'rare'      },
-  { id:'p61', name:'Tigre du Bengale',  emoji:'🐯', rarity:'rare'      },
-  { id:'p62', name:'Lion Doré',         emoji:'🦁', rarity:'rare'      },
-  { id:'p63', name:'Guépard Véloce',    emoji:'🐆', rarity:'rare'      },
-  { id:'p64', name:'Puma Mystère',      emoji:'🐱', rarity:'rare'      },
-  { id:'p65', name:'Ours Kodiak',       emoji:'🐻', rarity:'rare'      },
-  { id:'p66', name:'Béluga Blanc',      emoji:'🐋', rarity:'rare'      },
-  { id:'p67', name:'Narval Corne',      emoji:'🦄', rarity:'rare'      },
-  { id:'p68', name:'Pieuvre Violette',  emoji:'🐙', rarity:'rare'      },
-  { id:'p69', name:'Méduse Lumineuse',  emoji:'🪼', rarity:'rare'      },
-  { id:'p70', name:'Hippocampe Doré',   emoji:'🐴', rarity:'rare'      },
-  { id:'p71', name:'Chameau Désert',    emoji:'🐪', rarity:'rare'      },
-  { id:'p72', name:'Alpaga Duveteux',   emoji:'🦙', rarity:'rare'      },
-  { id:'p73', name:'Bison Prairie',     emoji:'🦬', rarity:'rare'      },
-  { id:'p74', name:'Orignal Majesté',   emoji:'🦌', rarity:'rare'      },
-  { id:'p75', name:'Pélican Blanc',     emoji:'🦢', rarity:'rare'      },
-  { id:'p76', name:'Toucan Arc-en-Ciel',emoji:'🦜', rarity:'rare'      },
-  { id:'p77', name:'Colibri Émeraude',  emoji:'🐦', rarity:'rare'      },
-  { id:'p78', name:'Paon Déployé',      emoji:'🦚', rarity:'rare'      },
-  { id:'p79', name:'Phénix Renaissant', emoji:'🦅', rarity:'rare'      },
-  { id:'p80', name:'Lynx Tacheté',      emoji:'🐆', rarity:'rare'      },
-  { id:'p81', name:'Dragon Émeraude',   emoji:'🐲', rarity:'epic'      },
-  { id:'p82', name:'Licorne Prisma',    emoji:'🦄', rarity:'epic'      },
-  { id:'p83', name:'Renard Céleste',    emoji:'🦊', rarity:'epic'      },
-  { id:'p84', name:'Dragon Céleste',    emoji:'🐲', rarity:'epic'      },
-  { id:'p85', name:'Kirin Doré',        emoji:'🦄', rarity:'epic'      },
-  { id:'p86', name:'Griffon Argenté',   emoji:'🦅', rarity:'epic'      },
-  { id:'p87', name:'Sphinx Mystique',   emoji:'🐱', rarity:'epic'      },
-  { id:'p88', name:'Pégase Ailé',       emoji:'🐴', rarity:'epic'      },
-  { id:'p89', name:'Serpent de Mer',    emoji:'🐉', rarity:'epic'      },
-  { id:'p90', name:'Manticore Écarlate',emoji:'🦁', rarity:'epic'      },
-  { id:'p91', name:'Chimère Prisma',    emoji:'🐲', rarity:'epic'      },
-  { id:'p92', name:'Hydre Cobalt',      emoji:'🐍', rarity:'epic'      },
-  { id:'p93', name:'Roc Tempête',       emoji:'🦅', rarity:'epic'      },
-  { id:'p94', name:'Licorne Nocturne',  emoji:'🦄', rarity:'epic'      },
-  { id:'p95', name:'Wyverne Cristal',   emoji:'🐲', rarity:'epic'      },
-  { id:'p96',  name:'Panda Étoilé',     emoji:'🐼', rarity:'legendary' },
-  { id:'p97',  name:'Céleste Étoilé',   emoji:'✨', rarity:'legendary' },
-  { id:'p98',  name:'Titan Doré',       emoji:'👑', rarity:'legendary' },
-  { id:'p99',  name:'Ombre Éternelle',  emoji:'🌑', rarity:'legendary' },
-  { id:'p100', name:'Aurora Borealis',  emoji:'🌈', rarity:'legendary' },
-  { id:'p101', name:'Raton Brun', emoji:'🦝', rarity:'common' },
-  { id:'p102', name:'Brebis Blanche', emoji:'🐑', rarity:'common' },
-  { id:'p103', name:'Perroquet Vert', emoji:'🦜', rarity:'common' },
-  { id:'p104', name:'Caneton Brun', emoji:'🦆', rarity:'common' },
-  { id:'p105', name:'Musaraigne Grise', emoji:'🐭', rarity:'common' },
-  { id:'p106', name:'Taupe Velours', emoji:'🐾', rarity:'common' },
-  { id:'p107', name:"Cochon d'Inde", emoji:'🐹', rarity:'common' },
-  { id:'p108', name:'Lapin Nain', emoji:'🐰', rarity:'common' },
-  { id:'p109', name:'Chaton Noir', emoji:'🐱', rarity:'common' },
-  { id:'p110', name:'Berger Australien', emoji:'🐶', rarity:'common' },
-  { id:'p111', name:'Poussin Roussi', emoji:'🐥', rarity:'common' },
-  { id:'p112', name:'Tourterelle Grise', emoji:'🕊', rarity:'common' },
-  { id:'p113', name:'Moineau Brun', emoji:'🐦', rarity:'common' },
-  { id:'p114', name:'Merle Noir', emoji:'🐦', rarity:'common' },
-  { id:'p115', name:'Pivert Vert', emoji:'🐦', rarity:'common' },
-  { id:'p116', name:'Chouette Tachetée', emoji:'🦉', rarity:'common' },
-  { id:'p117', name:'Blaireau Rayé', emoji:'🦡', rarity:'common' },
-  { id:'p118', name:'Belette Rousse', emoji:'🦦', rarity:'common' },
-  { id:'p119', name:'Lièvre Brun', emoji:'🐇', rarity:'common' },
-  { id:'p120', name:'Lapin Angora', emoji:'🐰', rarity:'common' },
-  { id:'p121', name:'Veau Tacheté', emoji:'🐮', rarity:'common' },
-  { id:'p122', name:'Agneau Noir', emoji:'🐑', rarity:'common' },
-  { id:'p123', name:'Poulain Brun', emoji:'🐴', rarity:'common' },
-  { id:'p124', name:'Chevreau Blanc', emoji:'🐐', rarity:'common' },
-  { id:'p125', name:'Ourson Polaire', emoji:'🐻', rarity:'common' },
-  { id:'p126', name:'Bébé Raton', emoji:'🦝', rarity:'common' },
-  { id:'p127', name:'Chaton Gris', emoji:'🐱', rarity:'common' },
-  { id:'p128', name:'Chiot Noir', emoji:'🐶', rarity:'common' },
-  { id:'p129', name:'Poussin Doré', emoji:'🐥', rarity:'common' },
-  { id:'p130', name:'Caneton Jaune', emoji:'🐤', rarity:'common' },
-  { id:'p131', name:'Grenouille Verte', emoji:'🐸', rarity:'common' },
-  { id:'p132', name:'Tortue Verte', emoji:'🐢', rarity:'common' },
-  { id:'p133', name:'Lézard Bleu', emoji:'🦎', rarity:'common' },
-  { id:'p134', name:'Escargot Mauve', emoji:'🐌', rarity:'common' },
-  { id:'p135', name:'Papillon Doré', emoji:'🦋', rarity:'common' },
-  { id:'p136', name:'Abeille Dorée', emoji:'🐝', rarity:'common' },
-  { id:'p137', name:'Coccinelle Rouge', emoji:'🐞', rarity:'common' },
-  { id:'p138', name:'Luciole Lumière', emoji:'🐛', rarity:'common' },
-  { id:'p139', name:'Crabe Rose', emoji:'🦀', rarity:'common' },
-  { id:'p140', name:'Crevette Corail', emoji:'🦐', rarity:'common' },
-  { id:'p141', name:'Koala Bébé', emoji:'🐨', rarity:'common' },
-  { id:'p142', name:'Panda Roux', emoji:'🦊', rarity:'common' },
-  { id:'p143', name:'Manchot Bébé', emoji:'🐧', rarity:'common' },
-  { id:'p144', name:'Otarie Grise', emoji:'🦭', rarity:'common' },
-  { id:'p145', name:'Morse Blanc', emoji:'🦭', rarity:'common' },
-  { id:'p146', name:'Phoque Bébé', emoji:'🦭', rarity:'common' },
-  { id:'p147', name:'Daim Tacheté', emoji:'🦌', rarity:'common' },
-  { id:'p148', name:'Chevreuil Brun', emoji:'🦌', rarity:'common' },
-  { id:'p149', name:'Sanglier Brun', emoji:'🐗', rarity:'common' },
-  { id:'p150', name:'Renard Brun', emoji:'🦊', rarity:'common' },
-  { id:'p151', name:'Ocelot Tacheté', emoji:'🐆', rarity:'rare' },
-  { id:'p152', name:'Serval Élancé', emoji:'🐆', rarity:'rare' },
-  { id:'p153', name:'Caracal Oreillé', emoji:'🐱', rarity:'rare' },
-  { id:'p154', name:'Lynx Boréal', emoji:'🐆', rarity:'rare' },
-  { id:'p155', name:'Panthère Noire', emoji:'🐆', rarity:'rare' },
-  { id:'p156', name:'Léopard des Neiges', emoji:'🐆', rarity:'rare' },
-  { id:'p157', name:'Ours Noir', emoji:'🐻', rarity:'rare' },
-  { id:'p158', name:'Ours Brun', emoji:'🐻', rarity:'rare' },
-  { id:'p159', name:'Wolverine Féroce', emoji:'🦡', rarity:'rare' },
-  { id:'p160', name:'Ratel Intrépide', emoji:'🦡', rarity:'rare' },
-  { id:'p161', name:'Orque Orca', emoji:'🐋', rarity:'rare' },
-  { id:'p162', name:'Cachalot Géant', emoji:'🐋', rarity:'rare' },
-  { id:'p163', name:'Raie Manta', emoji:'🐟', rarity:'rare' },
-  { id:'p164', name:'Requin Baleine', emoji:'🦈', rarity:'rare' },
-  { id:'p165', name:'Calmar Géant', emoji:'🐙', rarity:'rare' },
-  { id:'p166', name:'Pieuvre Géante', emoji:'🐙', rarity:'rare' },
-  { id:'p167', name:'Étoile de Mer', emoji:'⭐', rarity:'rare' },
-  { id:'p168', name:'Concombre de Mer', emoji:'🥒', rarity:'rare' },
-  { id:'p169', name:'Nautile Nacré', emoji:'🐚', rarity:'rare' },
-  { id:'p170', name:'Langouste Rouge', emoji:'🦞', rarity:'rare' },
-  { id:'p171', name:'Guanaco Élancé', emoji:'🦙', rarity:'rare' },
-  { id:'p172', name:'Vigogne Dorée', emoji:'🦙', rarity:'rare' },
-  { id:'p173', name:'Takin Doré', emoji:'🐐', rarity:'rare' },
-  { id:'p174', name:'Markhor Cornu', emoji:'🐐', rarity:'rare' },
-  { id:'p175', name:'Yak Tibétain', emoji:'🐂', rarity:'rare' },
-  { id:'p176', name:'Gaur Puissant', emoji:'🐂', rarity:'rare' },
-  { id:'p177', name:'Addax Blanc', emoji:'🦌', rarity:'rare' },
-  { id:'p178', name:'Oryx Cornu', emoji:'🦌', rarity:'rare' },
-  { id:'p179', name:'Okapi Rayé', emoji:'🦓', rarity:'rare' },
-  { id:'p180', name:'Tapir Malais', emoji:'🐗', rarity:'rare' },
-  { id:'p181', name:'Basilic Cristal', emoji:'🐍', rarity:'epic' },
-  { id:'p182', name:'Cockatrice Dorée', emoji:'🐓', rarity:'epic' },
-  { id:'p183', name:'Serpent Céleste', emoji:'🐉', rarity:'epic' },
-  { id:'p184', name:'Dragon Obsidienne', emoji:'🐲', rarity:'epic' },
-  { id:'p185', name:'Phénix Azur', emoji:'🦅', rarity:'epic' },
-  { id:'p186', name:'Simurgh Persan', emoji:'🦅', rarity:'epic' },
-  { id:'p187', name:'Wendigo Arctique', emoji:'🐺', rarity:'epic' },
-  { id:'p188', name:'Kelpie Aquatique', emoji:'🐴', rarity:'epic' },
-  { id:'p189', name:'Selkie Lunaire', emoji:'🦭', rarity:'epic' },
-  { id:'p190', name:'Qilin Jade', emoji:'🦄', rarity:'epic' },
-  { id:'p191', name:'Baku Rêveur', emoji:'🐘', rarity:'epic' },
-  { id:'p192', name:'Tengu Ailé', emoji:'🦅', rarity:'epic' },
-  { id:'p193', name:'Tanuki Chanceux', emoji:'🦝', rarity:'epic' },
-  { id:'p194', name:'Kitsune Neuf-Queues', emoji:'🦊', rarity:'epic' },
-  { id:'p195', name:'Raijū Tonnerre', emoji:'🐆', rarity:'epic' },
-  { id:'p196', name:'Léviathan Abyssal', emoji:'🐋', rarity:'legendary' },
-  { id:'p197', name:'Séraphin Doré', emoji:'✨', rarity:'legendary' },
-  { id:'p198', name:'Ouroboros Éternel', emoji:'🐍', rarity:'legendary' },
-  { id:'p199', name:'Tiamat Primordiale', emoji:'🐲', rarity:'legendary' },
-  { id:'p200', name:'Cosmos Infini', emoji:'🌌', rarity:'legendary' },
-];
-
+var PLUSHIES = [];
 var allCollections = {};
 var userCollection = {};
 var currentFilter  = 'all';
@@ -662,9 +425,9 @@ window.addEventListener('DOMContentLoaded', function() {
   loadCollections();
 });
 
-// ── CHARGEMENT DATA SE ────────────────────────────────────────────────────────
+// ── CHARGEMENT DATA ───────────────────────────────────────────────────────────
 function loadCollections() {
-  var baseUrl = 'https://raw.githubusercontent.com/Wanups/plushbox/main/';
+  var baseUrl = 'https://raw.githubusercontent.com/' + GITHUB_USER + '/' + GITHUB_REPO + '/main/';
   Promise.all([
     fetch(baseUrl + 'collections.json?t=' + Date.now()).then(function(r){return r.json();}),
     fetch(baseUrl + 'plushies.json?t=' + Date.now()).then(function(r){return r.json();})
@@ -672,7 +435,6 @@ function loadCollections() {
   .then(function(results) {
     allCollections = results[0] || {};
     userCollection = allCollections[username] || {};
-    // Remplace la liste des peluches par celle du fichier (avec les vraies images)
     if (Array.isArray(results[1]) && results[1].length > 0) {
       PLUSHIES = results[1];
     }
@@ -684,7 +446,7 @@ function loadCollections() {
   });
 }
 
-// ── CALCUL SCORE ──────────────────────────────────────────────────────────────
+// ── CALCULS ───────────────────────────────────────────────────────────────────
 function computeScore() {
   var score = 0;
   PLUSHIES.forEach(function(p) {
@@ -693,13 +455,12 @@ function computeScore() {
   return score;
 }
 
-// ── RENDU ─────────────────────────────────────────────────────────────────────
+// ── RENDU GRILLE ──────────────────────────────────────────────────────────────
 function render() {
   var owned = PLUSHIES.filter(function(p) { return userCollection[p.id]; });
   var total = PLUSHIES.length;
   var score = computeScore();
 
-  // Stats
   document.getElementById('stat-owned').textContent = owned.length;
   document.getElementById('stat-total').textContent = total;
   document.getElementById('stat-score').textContent = score;
@@ -718,7 +479,6 @@ function renderGrid(filter) {
   rarities.forEach(function(rarity) {
     var list = PLUSHIES.filter(function(p) { return p.rarity === rarity; });
 
-    // Filtre
     if (filter === 'owned')   list = list.filter(function(p) { return userCollection[p.id]; });
     if (filter === 'missing') list = list.filter(function(p) { return !userCollection[p.id]; });
     if (filter !== 'all' && filter !== 'owned' && filter !== 'missing' && filter !== rarity) return;
@@ -726,27 +486,26 @@ function renderGrid(filter) {
 
     var ownedInRarity = list.filter(function(p) { return userCollection[p.id]; }).length;
 
-    html += '<div class="rarity-section" data-rarity="' + rarity + '">';
-    html += '<div class="rarity-header">';
-    html += '<div class="rarity-line"></div>';
+    html += '<div class="rarity-section">';
+    html += '<div class="rarity-header"><div class="rarity-line"></div>';
     html += '<div class="rarity-label ' + rarity + '">' + RARITY_LABELS[rarity].toUpperCase() + '</div>';
     html += '<div class="rarity-count">' + ownedInRarity + ' / ' + list.length + '</div>';
-    html += '<div class="rarity-line"></div>';
-    html += '</div>';
+    html += '<div class="rarity-line"></div></div>';
     html += '<div class="plush-grid">';
 
     list.forEach(function(p, i) {
       var count   = userCollection[p.id] || 0;
       var locked  = count === 0 ? 'locked' : '';
+      
       var imgHtml = p.image && p.image !== ''
         ? '<img class="plush-img" src="' + p.image + '" alt="' + p.name + '" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\'">'
           + '<div class="plush-emoji" style="display:none">' + p.emoji + '</div>'
         : '<div class="plush-emoji">' + p.emoji + '</div>';
 
-      html += '<div class="plush-card ' + rarity + ' ' + locked + '" style="animation-delay:' + (i * 0.02) + 's">';
+      html += '<div class="plush-card ' + rarity + ' ' + locked + '" style="animation-delay:' + (i * 0.02) + 's" onclick="openModal(\'' + p.id + '\')">';
       if (count > 1) html += '<div class="plush-count">×' + count + '</div>';
       html += '<div class="plush-img-wrap">' + imgHtml + '</div>';
-      html += '<div class="plush-name">' + (locked ? '???' : p.name) + '</div>';
+      html += '<div class="plush-name">' + (locked ? '???????' : p.name) + '</div>';
       html += '<div class="plush-rarity ' + rarity + '">' + (locked ? '—' : RARITY_LABELS[rarity]) + '</div>';
       html += '</div>';
     });
@@ -755,13 +514,48 @@ function renderGrid(filter) {
   });
 
   if (html === '') {
-    html = '<div class="empty-state">'
-      + '<div class="empty-state-title">Aucune peluche ici</div>'
-      + '<div class="empty-state-sub">Essaie un autre filtre</div>'
-      + '</div>';
+    html = '<div class="empty-state"><div class="empty-state-title">Aucune peluche</div></div>';
   }
-
   content.innerHTML = html;
+}
+
+// ── MODALE ────────────────────────────────────────────────────────────────────
+function openModal(plushId) {
+  var plush = PLUSHIES.find(function(p) { return p.id === plushId; });
+  if (!plush) return;
+
+  var count  = userCollection[plushId] || 0;
+  var locked = count === 0;
+  var modal  = document.getElementById('plush-modal');
+  var content = document.querySelector('.modal-content');
+  var body   = document.getElementById('modal-body');
+
+  content.className = 'modal-content ' + plush.rarity + (locked ? ' locked' : '');
+
+  var imgHtml = plush.image && plush.image !== ''
+    ? '<img class="modal-img" src="' + plush.image + '" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\'">'
+      + '<div class="modal-emoji" style="display:none">' + plush.emoji + '</div>'
+    : '<div class="modal-emoji">' + plush.emoji + '</div>';
+
+  var name   = locked ? 'Mystère' : plush.name;
+  var rarity = locked ? 'Rareté Inconnue' : RARITY_LABELS[plush.rarity];
+  var desc   = locked 
+    ? "Cette peluche n'a pas encore rejoint ta collection. Continue d'ouvrir des boites pour la découvrir !" 
+    : "Félicitations ! Tu possèdes cette peluche en <b>" + count + "</b> exemplaire(s).";
+
+  body.innerHTML = 
+    '<div class="modal-img-wrap">' + imgHtml + '</div>' +
+    '<div class="modal-rarity" style="color:' + RARITY_COLORS[plush.rarity] + '">' + rarity + '</div>' +
+    '<div class="modal-name">' + name + '</div>' +
+    '<div class="modal-desc">' + desc + '</div>';
+
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('plush-modal').classList.remove('active');
+  document.body.style.overflow = '';
 }
 
 function filterRarity(rarity, btn) {
@@ -773,10 +567,7 @@ function filterRarity(rarity, btn) {
 
 function showError(title, sub) {
   document.getElementById('main-content').innerHTML =
-    '<div class="empty-state">'
-    + '<div class="empty-state-title">' + title + '</div>'
-    + '<div class="empty-state-sub">' + sub + '</div>'
-    + '</div>';
+    '<div class="empty-state"><div class="empty-state-title">' + title + '</div><div class="empty-state-sub">' + sub + '</div></div>';
 }
 </script>
 </body>
