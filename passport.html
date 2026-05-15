@@ -32,26 +32,6 @@
             padding: 20px;
         }
 
-        .nav-shortcut {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-decoration: none;
-            z-index: 2000;
-            transition: transform 0.2s, background 0.2s;
-            background: rgba(255,255,255,0.05);
-            padding: 12px;
-            border: var(--cartoon-border);
-            border-color: rgba(255,255,255,0.2);
-            border-radius: 12px;
-        }
-        .nav-shortcut:hover { transform: translateY(-3px); background: var(--passport-color); border-color: #1a1a1a; }
-        .nav-shortcut-icon { font-size: 28px; margin-bottom: 4px; }
-        .nav-shortcut-label { font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color: #fff; font-weight: 700; }
-
         .passport-container {
             width: 100%; height: 600px;
             display: flex; justify-content: center; align-items: center;
@@ -172,6 +152,33 @@
         .btn:hover { background: var(--passport-color); border-color: #1a1a1a; transform: translateY(-2px); }
         #page-info { font-weight: 600; letter-spacing: 1px; color: var(--accent-color); font-size: 14px; }
 
+        .nav-shortcut-bottom {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            margin-top: 30px;
+            background: rgba(255,255,255,0.05);
+            padding: 10px 20px;
+            border: var(--cartoon-border);
+            border-color: rgba(255,255,255,0.2);
+            border-radius: 15px;
+            transition: all 0.2s;
+        }
+        .nav-shortcut-bottom:hover { 
+            background: var(--passport-color); 
+            border-color: #1a1a1a;
+            transform: translateY(-2px);
+        }
+        .nav-shortcut-icon { font-size: 20px; }
+        .nav-shortcut-label { 
+            font-size: 10px; 
+            text-transform: uppercase; 
+            letter-spacing: 2px; 
+            color: #fff; 
+            font-weight: 700; 
+        }
+
         .loading-screen {
             position: fixed; inset: 0; background: var(--bg); z-index: 3000;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -184,9 +191,8 @@
         .page-footer { margin-top: auto; text-align: center; font-size: 10px; color: #ccc; letter-spacing: 2px; }
 
         @media (max-width: 500px) {
-            .nav-shortcut { top: 10px; right: 10px; padding: 8px; }
-            .nav-shortcut-icon { font-size: 22px; }
-            .passport-container { margin-top: 80px; }
+            .passport-container { margin-top: 20px; }
+            .btn { padding: 10px 16px; font-size: 10px; }
         }
     </style>
 </head>
@@ -197,22 +203,14 @@
         <p>Ouverture du passeport...</p>
     </div>
 
-    <a id="plush-shortcut" href="#" class="nav-shortcut" title="Voir mes Peluches">
-        <div class="nav-shortcut-icon">🧸</div>
-        <div class="nav-shortcut-label">Pluches</div>
-    </a>
-
     <div class="passport-container">
         <div id="passport-scene" class="passport-scene">
             <div id="passport-book" class="passport-book">
-                
                 <div class="page-side side-paper base-bg" style="position: absolute; inset: 0; z-index: 0;">
                     <div class="paper-texture"></div>
                     <div id="base-page-content"></div>
                 </div>
-
                 <div id="pages-stack" style="transform-style: preserve-3d; position: absolute; inset: 0; z-index: 10;"></div>
-
                 <div id="passport-cover-leaf" class="page-leaf" style="z-index: 1000;">
                     <div class="page-side side-cover">
                         <div class="paper-texture"></div>
@@ -242,7 +240,6 @@
                         <div class="paper-texture"></div>
                     </div>
                 </div>
-                
             </div>
         </div>
     </div>
@@ -253,9 +250,14 @@
         <button class="btn" onclick="nextPage()">Suivant</button>
     </div>
 
-    <p style="margin-top: 20px; color: #444; font-size: 11px; letter-spacing: 2px; text-transform: uppercase;">
+    <p style="margin-top: 20px; color: #444; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; text-align: center; max-width: 300px;">
         Feuillette ton passeport avec les boutons ou en cliquant sur les pages
     </p>
+
+    <a id="plush-shortcut" href="#" class="nav-shortcut-bottom" title="Voir mes Peluches">
+        <span class="nav-shortcut-icon">🧸</span>
+        <span class="nav-shortcut-label">Ta collection de peluches</span>
+    </a>
 
     <script>
         var GITHUB_USER = 'Wanups';
