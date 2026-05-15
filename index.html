@@ -422,6 +422,40 @@
     </div>
   </div>
 
+  <a id="passport-shortcut" href="#" class="nav-shortcut" title="Voir mon Passeport">
+    <div class="nav-shortcut-icon">🛂</div>
+    <div class="nav-shortcut-label">Passeport</div>
+  </a>
+
+  <style>
+    .nav-shortcut {
+      position: fixed;
+      top: 30px;
+      right: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      z-index: 100;
+      transition: transform 0.2s;
+      background: rgba(255,255,255,0.03);
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+    .nav-shortcut:hover { transform: translateY(-3px); background: rgba(255,255,255,0.08); border-color: var(--silver); }
+    .nav-shortcut-icon { font-size: 24px; margin-bottom: 4px; }
+    .nav-shortcut-label { font-size: 8px; text-transform: uppercase; letter-spacing: 1px; color: var(--text2); font-weight: 600; }
+  </style>
+
+  <script>
+    // Ajout du lien dynamique dans l'init
+    function updateShortcuts() {
+      const pLink = document.getElementById('passport-shortcut');
+      if (pLink && username) pLink.href = 'passport.html?user=' + username;
+    }
+  </script>
+
   <div id="global-nav" class="global-nav" style="display:none">
     <a href="leaderboard.html" class="filter-btn" style="text-decoration:none; border-color:var(--gold); color:var(--gold)">Classement Global</a>
   </div>
@@ -491,6 +525,7 @@ window.addEventListener('DOMContentLoaded', function() {
 
   document.getElementById('display-username').textContent = username;
   loadCollections();
+  updateShortcuts();
 
   // Navigation au clavier
   window.addEventListener('keydown', function(e) {
