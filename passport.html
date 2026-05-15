@@ -124,11 +124,11 @@
         }
 
         /* ID PAGE NEW LAYOUT */
-        .id-page { display: flex; flex-direction: column; height: 100%; padding: 5px; }
-        .id-header { text-align: center; border-bottom: 2px solid #1a1a1a; padding-bottom: 5px; margin-bottom: 15px; }
+        .id-page { display: flex; flex-direction: column; height: 100%; padding: 5px; justify-content: space-around; }
+        .id-header { text-align: center; border-bottom: 2px solid #1a1a1a; padding-bottom: 5px; margin-bottom: 5px; }
         .id-header h1 { font-size: 20px; margin: 0; color: #1a1a1a; text-transform: uppercase; letter-spacing: 4px; }
         
-        .id-main-top { display: grid; grid-template-columns: 140px 1fr; gap: 15px; align-items: center; margin-bottom: 20px; }
+        .id-main-top { display: grid; grid-template-columns: 140px 1fr; gap: 15px; align-items: center; }
         
         .id-photo-frame {
             width: 130px; height: 150px; background: #fff; border: 3px solid #1a1a1a;
@@ -143,7 +143,6 @@
             display: grid; 
             grid-template-columns: 1fr 1fr; 
             gap: 15px; 
-            margin-top: auto;
             padding-top: 15px;
             border-top: 1px dashed rgba(0,0,0,0.1);
         }
@@ -171,11 +170,6 @@
             background: var(--accent-color); padding: 4px 10px; border-radius: 8px;
             border: 2px solid #1a1a1a; transform: rotate(3deg); display: inline-block;
         }
-
-        .cover-design { display: flex; flex-direction: column; align-items: center; text-align: center; width: 100%; }
-        .cover-logo { width: 130px; height: 130px; margin-bottom: 25px; fill: var(--accent-color); filter: drop-shadow(4px 4px 0px rgba(0,0,0,0.3)); }
-        .passport-title { font-size: 32px; font-weight: 900; color: white; text-shadow: 4px 4px 0px #1a1a1a; margin: 0; text-transform: uppercase; max-width: 90%; overflow: hidden; text-overflow: ellipsis; }
-        .passport-subtitle { font-size: 18px; font-weight: 700; color: var(--accent-color); margin-top: 5px; letter-spacing: 4px; }
 
         .paper-texture { position: absolute; inset: 0; background-image: url('https://www.transparenttextures.com/patterns/natural-paper.png'); opacity: 0.2; pointer-events: none; }
 
@@ -207,13 +201,7 @@
             transform: translateY(-2px);
         }
         .nav-shortcut-icon { font-size: 20px; }
-        .nav-shortcut-label { 
-            font-size: 10px; 
-            text-transform: uppercase; 
-            letter-spacing: 2px; 
-            color: #fff; 
-            font-weight: 700; 
-        }
+        .nav-shortcut-label { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: #fff; font-weight: 700; }
 
         .loading-screen {
             position: fixed; inset: 0; background: var(--bg); z-index: 3000;
@@ -361,12 +349,12 @@
 
         function getCollectionPercent(userStamps) {
             if (!knownGames || knownGames.length === 0) return 0;
-            const owned = userStamps.filter(s => knownGames.some(g => g.toLowerCase() === s.game.toLowerCase())).length;
-            return Math.round((owned / knownGames.length) * 100);
+            const validStamps = userStamps.filter(s => knownGames.some(g => g.toLowerCase() === s.game.toLowerCase())).length;
+            return Math.round((validStamps / knownGames.length) * 100);
         }
 
         function getRank(login) {
-            if (!knownGames || knownGames.length === 0) return "N/A";
+            if (!allCollections || Object.keys(allCollections).length === 0) return "N/A";
             const ranking = Object.entries(allCollections)
                 .map(([user, s]) => ({ user, percent: getCollectionPercent(s) }))
                 .sort((a, b) => b.percent - a.percent);
