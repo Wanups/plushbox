@@ -122,19 +122,58 @@
             letter-spacing: 0.5px; line-height: 1.1;
         }
 
+        /* ID PAGE LAYOUT */
         .id-page { display: flex; flex-direction: column; height: 100%; padding: 5px; justify-content: space-between; }
         .id-header { text-align: center; border-bottom: 2px solid #1a1a1a; padding-bottom: 5px; margin-bottom: 15px; }
         .id-header h1 { font-size: 20px; margin: 0; color: #1a1a1a; text-transform: uppercase; letter-spacing: 4px; }
-        .id-main { display: flex; flex-direction: column; gap: 20px; flex-grow: 1; align-items: center; }
+        
+        .id-main { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; flex-grow: 1; align-items: start; }
+        
+        .id-left-col { display: flex; flex-direction: column; gap: 15px; align-items: center; }
+        .id-right-col { display: flex; flex-direction: column; gap: 20px; align-items: center; padding-top: 10px; }
+
         .id-photo-frame {
-            width: 140px; height: 160px; background: #fff; border: 3px solid #1a1a1a;
+            width: 130px; height: 150px; background: #fff; border: 3px solid #1a1a1a;
             border-radius: 10px; padding: 5px; box-shadow: 6px 6px 0px rgba(0,0,0,0.1); transform: rotate(-2deg);
         }
         .id-photo { width: 100%; height: 100%; object-fit: cover; border-radius: 5px; }
-        .id-info-list { width: 100%; display: flex; flex-direction: column; gap: 12px; margin-top: 10px; }
+        
+        .id-info-list { width: 100%; display: flex; flex-direction: column; gap: 10px; margin-top: 5px; }
         .id-info-item { display: flex; flex-direction: column; border-left: 4px solid var(--passport-color); padding-left: 10px; text-align: left; }
-        .id-info-label { font-size: 10px; text-transform: uppercase; color: #7f8c8d; font-weight: 800; letter-spacing: 1px; }
-        .id-info-value { font-size: 18px; color: #1a1a1a; font-weight: 700; line-height: 1.2; }
+        .id-info-label { font-size: 9px; text-transform: uppercase; color: #7f8c8d; font-weight: 800; letter-spacing: 1px; }
+        .id-info-value { font-size: 14px; color: #1a1a1a; font-weight: 700; line-height: 1.2; word-break: break-all; }
+
+        /* CIRCLE PROGRESS */
+        .progress-circle {
+            width: 100px; height: 100px;
+            border-radius: 50%;
+            background: conic-gradient(var(--passport-color) var(--progress, 0%), #ddd 0deg);
+            display: flex; align-items: center; justify-content: center;
+            position: relative;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .progress-circle::before {
+            content: "";
+            position: absolute;
+            width: 80px; height: 80px;
+            border-radius: 50%;
+            background: var(--paper-color);
+        }
+        .progress-value {
+            position: relative;
+            font-size: 22px;
+            font-weight: 900;
+            color: var(--passport-color);
+        }
+
+        .rank-box { text-align: center; }
+        .rank-label { font-size: 10px; text-transform: uppercase; color: #7f8c8d; font-weight: 800; margin-bottom: 5px; }
+        .rank-value { 
+            font-size: 24px; font-weight: 900; color: var(--passport-color); 
+            background: var(--accent-color); padding: 5px 15px; border-radius: 10px;
+            border: 2px solid #1a1a1a; transform: rotate(3deg);
+            display: inline-block;
+        }
 
         .cover-design { display: flex; flex-direction: column; align-items: center; text-align: center; width: 100%; }
         .cover-logo { width: 130px; height: 130px; margin-bottom: 25px; fill: var(--accent-color); filter: drop-shadow(4px 4px 0px rgba(0,0,0,0.3)); }
@@ -266,6 +305,8 @@
 
         var username = '';
         var stamps = [];
+        var allCollections = {};
+        var knownGames = [];
         var accountInfo = { date: '...', age: '...' };
         var currentPage = 0;
         var totalPages = 0;
@@ -296,10 +337,16 @@
 
         async function loadData() {
             try {
-                var res = await fetch(`https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main/${GITHUB_FILE}?t=${Date.now()}`);
-                var allData = await res.json();
-                stamps = allData[username] || [];
+                // Collections & Known Games
+                var resCollections = await fetch(`https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main/${GITHUB_FILE}?t=${Date.now()}`);
+                allCollections = await resCollections.json();
+                stamps = allCollections[username] || [];
 
+                var resKnown = await fetch(`https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main/passport_known_games.json?t=${Date.now()}`);
+                // Si passport_known_games.json n'existe pas ou est vide, on utilise une liste vide
+                try { knownGames = await resKnown.json(); } catch(e) { knownGames = []; }
+
+                // Infos Twitch
                 var ivr = await fetch(`https://api.ivr.fi/v2/twitch/user?login=${username}`);
                 var ivrData = await ivr.json();
                 if (ivrData && ivrData[0]) {
@@ -318,24 +365,53 @@
             return `${y} an(s)`;
         }
 
+        function getCollectionPercent(userStamps) {
+            if (!knownGames || knownGames.length === 0) return 0;
+            const owned = userStamps.filter(s => knownGames.some(g => g.toLowerCase() === s.game.toLowerCase())).length;
+            return Math.round((owned / knownGames.length) * 100);
+        }
+
+        function getRank(login) {
+            if (!knownGames || knownGames.length === 0) return "N/A";
+            const ranking = Object.entries(allCollections)
+                .map(([user, s]) => ({ user, percent: getCollectionPercent(s) }))
+                .sort((a, b) => b.percent - a.percent);
+            const rank = ranking.findIndex(r => r.user === login) + 1;
+            return rank > 0 ? "TOP " + rank : "N/A";
+        }
+
         function initPassport() {
             const stack = document.getElementById('pages-stack');
             const base  = document.getElementById('base-page-content');
             stack.innerHTML = '';
             base.innerHTML = '';
 
+            const percent = getCollectionPercent(stamps);
+            const rank = getRank(username);
+
             const idPageHTML = `
                 <div class="id-page">
                     <div class="id-header"><h1>IDENTITÉ</h1></div>
                     <div class="id-main">
-                        <div class="id-photo-frame">
-                            <img src="https://unavatar.io/twitch/${username}" class="id-photo" onerror="this.src='https://static-cdn.jtvnw.net/ttv-static/404_user_150x150.png'">
+                        <div class="id-left-col">
+                            <div class="id-photo-frame">
+                                <img src="https://unavatar.io/twitch/${username}" class="id-photo" onerror="this.src='https://static-cdn.jtvnw.net/ttv-static/404_user_150x150.png'">
+                            </div>
+                            <div class="id-info-list">
+                                <div class="id-info-item"><span class="id-info-label">Nom / Pseudo</span><span class="id-info-value">${username.toUpperCase()}</span></div>
+                                <div class="id-info-item"><span class="id-info-label">Date de naissance</span><span class="id-info-value">${accountInfo.date}</span></div>
+                                <div class="id-info-item"><span class="id-info-label">Âge</span><span class="id-info-value">${accountInfo.age}</span></div>
+                                <div class="id-info-item"><span class="id-info-label">Nombre de voyages</span><span class="id-info-value">${stamps.length} Tampons</span></div>
+                            </div>
                         </div>
-                        <div class="id-info-list">
-                            <div class="id-info-item"><span class="id-info-label">Nom / Pseudo</span><span class="id-info-value">${username.toUpperCase()}</span></div>
-                            <div class="id-info-item"><span class="id-info-label">Date de naissance</span><span class="id-info-value">${accountInfo.date}</span></div>
-                            <div class="id-info-item"><span class="id-info-label">Âge</span><span class="id-info-value">${accountInfo.age}</span></div>
-                            <div class="id-info-item"><span class="id-info-label">Nombre de voyages</span><span class="id-info-value">${stamps.length} Tampons</span></div>
+                        <div class="id-right-col">
+                            <div class="progress-circle" style="--progress: ${percent * 3.6}deg">
+                                <div class="progress-value">${percent}%</div>
+                            </div>
+                            <div class="rank-box">
+                                <div class="rank-label">Rang collectionneur</div>
+                                <div class="rank-value">${rank}</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -385,7 +461,7 @@
                     const rot = (Math.random() * 20 - 10) + "deg";
                     h += `
                         <div class="stamp-slot">
-                            <img class="ink-stamp" src="${s.image}" style="--rot:${rot}" onerror="this.src='https://static-cdn.jtvnw.net/ttv-static/404_boxart-144x192.jpg'">
+                            <img class="ink-stamp" src="${s.image}" style="--rot:${rot}" onerror="this.src='https://static-cdn.jtvnw.net/ttv-boxart-144x192.jpg'">
                             <div class="stamp-game-name">${s.game}</div>
                             <div class="stamp-date">${s.date}</div>
                         </div>
