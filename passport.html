@@ -227,7 +227,33 @@
         <p>Ouverture du passeport...</p>
     </div>
 
-    <div class="passport-container">
+    <a id="plush-shortcut" href="#" class="nav-shortcut" title="Voir mes Peluches">
+        <div class="nav-shortcut-icon">🧸</div>
+        <div class="nav-shortcut-label">Pluches</div>
+    </a>
+
+    <style>
+        .nav-shortcut {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            z-index: 2000;
+            transition: transform 0.2s, background 0.2s;
+            background: rgba(255,255,255,0.05);
+            padding: 12px;
+            border: var(--cartoon-border);
+            border-color: rgba(255,255,255,0.2);
+            border-radius: 12px;
+        }
+        .nav-shortcut:hover { transform: translateY(-3px); background: var(--passport-color); border-color: #1a1a1a; }
+        .nav-shortcut-icon { font-size: 28px; margin-bottom: 4px; }
+        .nav-shortcut-label { font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color: #fff; font-weight: 700; }
+    </style>
+
         <div id="passport-scene" class="passport-scene">
             <div id="passport-book" class="passport-book">
                 
@@ -306,6 +332,10 @@
             }
 
             document.getElementById('viewer-name-display').textContent = username.toUpperCase();
+            
+            // Mise à jour du raccourci vers Plush Box
+            const plushLink = document.getElementById('plush-shortcut');
+            if (plushLink) plushLink.href = 'index.html?user=' + username;
 
             await loadData();
             initPassport();
