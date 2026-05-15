@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Passport — Ma Collection</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --paper-color: #fff9eb;
+            --passport-color: #800020;
+            --ink-color: #2c3e50;
+            --cozy-font: 'Fredoka', sans-serif;
+            --accent-color: #f1c40f;
+            --cartoon-border: 4px solid #1a1a1a;
+            --bg: #121212;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body { 
+            margin: 0; 
+            min-height: 100vh;
+            background: var(--bg); 
+            font-family: var(--cozy-font); 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            color: #fff;
+        }
+
+        .passport-container {
+            width: 100%; height: 600px;
+            display: flex; justify-content: center; align-items: center;
+            perspective: 2500px;
+            margin-top: -50px;
+        }
+
+        .passport-scene {
+            width: 360px; height: 500px;
+            transform-style: preserve-3d;
+            transform: rotateX(15deg) rotateY(0deg);
+            opacity: 0;
+            transition: transform 1s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+        }
+
+        .passport-scene.visible {
+            opacity: 1;
+        }
+
+        .passport-book {
+            width: 100%; height: 100%;
+            transform-style: preserve-3d;
+            position: relative;
+        }
+
+        .page-leaf {
+            width: 368px; height: 508px; position: absolute;
+            top: -4px; left: -4px;
+            transform-origin: left; transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
+            cursor: pointer;
+        }
+
+        .page-side {
+            position: absolute; inset: 0;
+            backface-visibility: hidden; 
+            -webkit-backface-visibility: hidden;
+            border-radius: 20px;
+            background-color: var(--paper-color);
+            padding: 20px; box-sizing: border-box;
+            border: var(--cartoon-border);
+            transform-style: preserve-3d;
+            overflow: hidden;
+        }
+
+        .page-back { 
+            transform: rotateY(-180deg); 
+            background-color: var(--paper-color); 
+        }
+
+        .side-paper::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 50px; height: 100%;
+            background: linear-gradient(to right, rgba(0,0,0,0.1), transparent);
+            pointer-events: none;
+        }
+
+        .side-cover { 
+            background: #800020;
+            background: linear-gradient(135deg, #a52a2a 0%, #800020 100%);
+            color: var(--accent-color); 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .side-cover.blank {
+            background: #800020;
+            background: linear-gradient(135deg, #a52a2a 0%, #800020 100%);
+        }
+
+        .side-paper { background-color: var(--paper-color); display: flex; flex-direction: column; }
+
+        .flipped { transform: rotateY(-160deg) !important; }
+
+        .stamps-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            grid-template-rows: 175px 175px; 
+            gap: 10px; 
+            margin-top: 10px;
+            flex-grow: 1;
+        }
+
+        .stamp-slot {
+            position: relative; 
+            display: flex; 
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 1px dashed rgba(0,0,0,0.05);
+            border-radius: 10px;
+        }
+
+        .ink-stamp {
+            width: 100px; height: 135px; object-fit: cover;
+            mix-blend-mode: multiply;
+            border: 4px solid white; border-radius: 8px;
+            transform: rotate(var(--rot));
+            transition: transform 0.3s;
+        }
+
+        .stamp-date { 
+            margin-top: 2px; font-size: 11px; color: #7f8c8d; font-weight: 600; 
+        }
+
+        .stamp-game-name {
+            font-size: 14px; font-weight: 900; text-align: center;
+            max-width: 140px; white-space: nowrap; overflow: hidden;
+            text-overflow: ellipsis; color: var(--ink-color);
+            text-transform: uppercase; margin-top: 6px;
+            letter-spacing: 0.5px;
+            line-height: 1.1;
+        }
+
+        .id-page-container { width: 100%; height: 100%; background-color: var(--paper-color); }
+        .id-page {
+            display: flex; flex-direction: column; height: 100%; padding: 5px;
+            justify-content: space-between;
+        }
+
+        .id-header { text-align: center; border-bottom: 2px solid #1a1a1a; padding-bottom: 5px; margin-bottom: 15px; }
+        .id-header h1 { font-size: 20px; margin: 0; color: #1a1a1a; text-transform: uppercase; letter-spacing: 4px; }
+        .id-main { display: flex; flex-direction: column; gap: 20px; flex-grow: 1; align-items: center; }
+        .id-photo-frame {
+            width: 140px; height: 160px; background: #fff; border: 3px solid #1a1a1a;
+            border-radius: 10px; padding: 5px; box-shadow: 6px 6px 0px rgba(0,0,0,0.1); transform: rotate(-2deg);
+        }
+        .id-photo { width: 100%; height: 100%; object-fit: cover; border-radius: 5px; }
+        .id-info-list { width: 100%; display: flex; flex-direction: column; gap: 12px; margin-top: 10px; }
+        .id-info-item { display: flex; flex-direction: column; border-left: 4px solid var(--passport-color); padding-left: 10px; text-align: left; }
+        .id-info-label { font-size: 10px; text-transform: uppercase; color: #7f8c8d; font-weight: 800; letter-spacing: 1px; }
+        .id-info-value { font-size: 18px; color: #1a1a1a; font-weight: 700; line-height: 1.2; }
+
+        .cover-design { display: flex; flex-direction: column; align-items: center; text-align: center; width: 100%; }
+        .cover-logo { width: 130px; height: 130px; margin-bottom: 25px; fill: var(--accent-color); filter: drop-shadow(4px 4px 0px rgba(0,0,0,0.3)); }
+        .passport-title { font-size: 32px; font-weight: 900; color: white; text-shadow: 4px 4px 0px #1a1a1a; margin: 0; text-transform: uppercase; max-width: 90%; overflow: hidden; text-overflow: ellipsis; }
+        .passport-subtitle { font-size: 18px; font-weight: 700; color: var(--accent-color); margin-top: 5px; letter-spacing: 4px; }
+
+        .paper-texture { position: absolute; inset: 0; background-image: url('https://www.transparenttextures.com/patterns/natural-paper.png'); opacity: 0.2; pointer-events: none; }
+
+        .controls {
+            margin-top: 40px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .btn {
+            background: rgba(255,255,255,0.05);
+            border: var(--cartoon-border);
+            border-color: rgba(255,255,255,0.2);
+            color: #fff;
+            padding: 12px 24px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.2s;
+            border-radius: 10px;
+        }
+
+        .btn:hover { background: var(--passport-color); border-color: #1a1a1a; transform: translateY(-2px); }
+        .btn:active { transform: translateY(0); }
+
+        #page-info { font-weight: 600; letter-spacing: 1px; color: var(--accent-color); font-size: 14px; }
+
+        .loading-screen {
+            position: fixed; inset: 0; background: var(--bg); z-index: 2000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.5s;
+        }
+        .spinner { width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.1); border-top-color: var(--accent-color); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        h2 { margin: 0; text-align: center; color: #1a1a1a; font-size: 20px; font-weight: 700; margin-bottom: 10px; }
+
+        .page-footer {
+            margin-top: auto;
+            text-align: center;
+            font-size: 10px;
+            color: #ccc;
+            letter-spacing: 2px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loading" class="loading-screen">
+        <div class="spinner"></div>
+        <p>Ouverture du passeport...</p>
+    </div>
+
+    <div class="passport-container">
+        <div id="passport-scene" class="passport-scene">
+            <div id="passport-book" class="passport-book">
+                
+                <!-- Fond fixe du livre (Base de droite) -->
+                <div class="page-side side-paper base-bg" style="position: absolute; inset: 0; z-index: 0;">
+                    <div class="paper-texture"></div>
+                    <div id="base-page-content"></div>
+                </div>
+
+                <!-- Pile de pages dynamiques -->
+                <div id="pages-stack" style="transform-style: preserve-3d; position: absolute; inset: 0; z-index: 10;"></div>
+
+                <!-- Couverture Avant Permanente -->
+                <div id="passport-cover-leaf" class="page-leaf" style="z-index: 1000;">
+                    <div class="page-side side-cover">
+                        <div class="paper-texture"></div>
+                        <div class="cover-design">
+                            <svg class="cover-logo" viewBox="0 0 200 200">
+                                <g transform="rotate(-45, 100, 100)" opacity="0.6">
+                                    <rect x="88" y="-10" width="24" height="220" rx="6" fill="currentColor" />
+                                    <rect x="88" y="40" width="24" height="4" fill="#800020" opacity="0.3" />
+                                    <rect x="88" y="95" width="24" height="4" fill="#800020" opacity="0.3" />
+                                    <rect x="88" y="150" width="24" height="4" fill="#800020" opacity="0.3" />
+                                    <path d="M112,60 Q150,40 170,70 Q140,90 112,60" fill="currentColor" />
+                                    <path d="M88,130 Q50,110 30,140 Q60,160 88,130" fill="currentColor" />
+                                </g>
+                                <g transform="translate(0, 5)">
+                                    <rect x="35" y="85" width="130" height="75" rx="15" fill="currentColor" stroke="#800020" stroke-width="4"/>
+                                    <rect x="50" y="110" width="35" height="12" rx="3" fill="#800020"/>
+                                    <rect x="61.5" y="98.5" width="12" height="35" rx="3" fill="#800020"/>
+                                    <circle cx="125" cy="110" r="11" fill="#800020"/>
+                                    <circle cx="148" cy="128" r="11" fill="#800020"/>
+                                </g>
+                            </svg>
+                            <h1 class="passport-title" id="viewer-name-display">VIEWER</h1>
+                            <div class="passport-subtitle">PASSEPORT</div>
+                        </div>
+                    </div>
+                    <div class="page-side page-back side-cover blank">
+                        <div class="paper-texture"></div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="btn" onclick="prevPage()">Précédent</button>
+        <span id="page-info">Chargement...</span>
+        <button class="btn" onclick="nextPage()">Suivant</button>
+    </div>
+
+    <p style="margin-top: 20px; color: #444; font-size: 11px; letter-spacing: 2px; text-transform: uppercase;">
+        Feuillette ton passeport avec les boutons ou en cliquant sur les pages
+    </p>
+
+    <script>
+        var GITHUB_USER = 'Wanups';
+        var GITHUB_REPO = 'plushbox';
+        var GITHUB_FILE = 'passport_collections.json';
+
+        var username = '';
+        var stamps = [];
+        var accountInfo = { date: '...', age: '...' };
+        var currentPage = 0;
+        var totalPages = 0;
+
+        window.addEventListener('DOMContentLoaded', async function() {
+            var params = new URLSearchParams(window.location.search);
+            username = (params.get('user') || '').toLowerCase().trim();
+
+            if (!username) {
+                document.body.innerHTML = '<h1 style="color:#fff">Erreur : Aucun utilisateur spécifié</h1>';
+                return;
+            }
+
+            document.getElementById('viewer-name-display').textContent = username.toUpperCase();
+
+            await loadData();
+            initPassport();
+            
+            document.getElementById('loading').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('passport-scene').classList.add('visible');
+            }, 500);
+        });
+
+        async function loadData() {
+            try {
+                // Chargement des collections
+                var res = await fetch(`https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main/${GITHUB_FILE}?t=${Date.now()}`);
+                var allData = await res.json();
+                stamps = allData[username] || [];
+
+                // Chargement des infos Twitch
+                var ivr = await fetch(`https://api.ivr.fi/v2/twitch/user?login=${username}`);
+                var ivrData = await ivr.json();
+                if (ivrData && ivrData[0]) {
+                    var d = new Date(ivrData[0].createdAt);
+                    accountInfo.date = d.toLocaleDateString('fr-FR');
+                    accountInfo.age = calculateAge(d);
+                }
+            } catch(e) { console.error('Load Error:', e); }
+        }
+
+        function calculateAge(start) {
+            const today = new Date();
+            let y = today.getFullYear() - start.getFullYear();
+            let m = today.getMonth() - start.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < start.getDate())) y--;
+            return `${y} an(s)`;
+        }
+
+        function initPassport() {
+            const stack = document.getElementById('pages-stack');
+            const base  = document.getElementById('base-page-content');
+            stack.innerHTML = '';
+            base.innerHTML = '';
+
+            const idPageHTML = `
+                <div class="id-page">
+                    <div class="id-header"><h1>IDENTITÉ</h1></div>
+                    <div class="id-main">
+                        <div class="id-photo-frame">
+                            <img src="https://unavatar.io/twitch/${username}" class="id-photo" onerror="this.src='https://static-cdn.jtvnw.net/ttv-static/404_user_150x150.png'">
+                        </div>
+                        <div class="id-info-list">
+                            <div class="id-info-item"><span class="id-info-label">Nom / Pseudo</span><span class="id-info-value">${username.toUpperCase()}</span></div>
+                            <div class="id-info-item"><span class="id-info-label">Date de naissance</span><span class="id-info-value">${accountInfo.date}</span></div>
+                            <div class="id-info-item"><span class="id-info-label">Âge</span><span class="id-info-value">${accountInfo.age}</span></div>
+                            <div class="id-info-item"><span class="id-info-label">Nombre de voyages</span><span class="id-info-value">${stamps.length} Tampons</span></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Nombre de pages nécessaires pour les tampons
+            const stampPageCount = Math.max(1, Math.ceil(stamps.length / 4));
+            totalPages = stampPageCount + 1; // +1 pour la page ID
+
+            // Génération de la pile de feuilles
+            for (let i = 1; i <= stampPageCount; i++) {
+                const leaf = document.createElement('div');
+                leaf.className = 'page-leaf';
+                leaf.id = `leaf-${i}`;
+                leaf.style.zIndex = (500 - i).toString();
+                
+                let frontContent = "";
+                if (i === 1) {
+                    frontContent = idPageHTML;
+                } else {
+                    const stampStartIdx = (i - 2) * 4;
+                    frontContent = `<h2>Page ${i}</h2><div class="stamps-grid">${createGrid(stamps, stampStartIdx)}</div><div class="page-footer">P. ${i}</div>`;
+                }
+
+                leaf.innerHTML = `
+                    <div class="page-side side-paper"><div class="paper-texture"></div>${frontContent}</div>
+                    <div class="page-side page-back side-paper"><div class="paper-texture"></div></div>
+                `;
+                
+                leaf.onclick = (e) => {
+                    e.stopPropagation();
+                    if (currentPage === i - 1) nextPage();
+                    else if (currentPage === i) prevPage();
+                };
+                
+                stack.appendChild(leaf);
+            }
+
+            // Contenu de la page de fond (dernière page)
+            const baseStartIdx = (stampPageCount - 1) * 4;
+            base.innerHTML = `<h2>Page ${stampPageCount + 1}</h2><div class="stamps-grid">${createGrid(stamps, baseStartIdx)}</div><div class="page-footer">P. ${stampPageCount + 1}</div>`;
+
+            updateControls();
+        }
+
+        function createGrid(stamps, start) {
+            let h = '';
+            for (let i = 0; i < 4; i++) {
+                const idx = start + i;
+                const s = stamps[idx];
+                if (s) {
+                    const rot = (Math.random() * 20 - 10) + "deg";
+                    h += `
+                        <div class="stamp-slot">
+                            <img class="ink-stamp" src="${s.image}" style="--rot:${rot}" onerror="this.src='https://static-cdn.jtvnw.net/ttv-static/404_boxart-144x192.jpg'">
+                            <div class="stamp-game-name">${s.game}</div>
+                            <div class="stamp-date">${s.date}</div>
+                        </div>
+                    `;
+                } else {
+                    h += `<div class="stamp-slot"></div>`;
+                }
+            }
+            return h;
+        }
+
+        function nextPage() {
+            if (currentPage === 0) {
+                const cover = document.getElementById('passport-cover-leaf');
+                cover.classList.add('flipped');
+                setTimeout(() => cover.style.zIndex = "1", 500);
+                currentPage++;
+            } else if (currentPage < totalPages) {
+                const leaf = document.getElementById(`leaf-${currentPage}`);
+                if (leaf) {
+                    leaf.classList.add('flipped');
+                    leaf.style.zIndex = (600 + currentPage).toString();
+                    currentPage++;
+                }
+            }
+            updateControls();
+        }
+
+        function prevPage() {
+            if (currentPage === 1) {
+                const cover = document.getElementById('passport-cover-leaf');
+                cover.style.zIndex = "1000";
+                cover.classList.remove('flipped');
+                currentPage--;
+            } else if (currentPage > 1) {
+                const leaf = document.getElementById(`leaf-${currentPage - 1}`);
+                if (leaf) {
+                    leaf.classList.remove('flipped');
+                    leaf.style.zIndex = (500 - (currentPage - 1)).toString();
+                    currentPage--;
+                }
+            }
+            updateControls();
+        }
+
+        function updateControls() {
+            document.getElementById('page-info').textContent = `Page ${currentPage} / ${totalPages}`;
+        }
+
+        // Navigation au clavier
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextPage();
+            if (e.key === 'ArrowLeft') prevPage();
+        });
+
+    </script>
+</body>
+</html>
