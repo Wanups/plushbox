@@ -322,21 +322,45 @@
 
         async function loadData() {
             try {
-                var resCollections = await fetch(`https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main/${GITHUB_FILE}?t=${Date.now()}`);
-                allCollections = await resCollections.json();
-                stamps = allCollections[username] || [];
+                const timestamp = Date.now();
+                const baseUrl = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main/`;
 
-                var resKnown = await fetch(`https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main/passport_known_games.json?t=${Date.now()}`);
-                try { knownGames = await resKnown.json(); } catch(e) { knownGames = []; }
-
-                var ivr = await fetch(`https://api.ivr.fi/v2/twitch/user?login=${username}`);
-                var ivrData = await ivr.json();
-                if (ivrData && ivrData[0]) {
-                    var d = new Date(ivrData[0].createdAt);
-                    accountInfo.date = d.toLocaleDateString('fr-FR');
-                    accountInfo.age = calculateAge(d);
+                // 1. Charger les collections
+                const resCollections = await fetch(`${baseUrl}${GITHUB_FILE}?t=${timestamp}`);
+                if (resCollections.ok) {
+                    allCollections = await resCollections.json();
+                    stamps = allCollections[username] || [];
                 }
-            } catch(e) { console.error('Load Error:', e); }
+
+                // 2. Charger les jeux connus (pour le %)
+                // On utilise un try/catch spécifique pour que si le fichier n'existe pas encore, ça ne bloque pas tout
+                try {
+                    const resKnown = await fetch(`${baseUrl}passport_known_games.json?t=${timestamp}`);
+                    if (resKnown.ok) {
+                        knownGames = await resKnown.json();
+                    } else {
+                        console.warn("Fichier passport_known_games.json introuvable (404)");
+                        knownGames = [];
+                    }
+                } catch(err) {
+                    console.warn("Erreur lors du fetch de known_games:", err);
+                    knownGames = [];
+                }
+
+                // 3. Infos Twitch
+                try {
+                    const ivr = await fetch(`https://api.ivr.fi/v2/twitch/user?login=${username}`);
+                    const ivrData = await ivr.json();
+                    if (ivrData && ivrData[0]) {
+                        const d = new Date(ivrData[0].createdAt);
+                        accountInfo.date = d.toLocaleDateString('fr-FR');
+                        accountInfo.age = calculateAge(d);
+                    }
+                } catch(err) { console.warn("Erreur Twitch API:", err); }
+
+            } catch(e) { 
+                console.error('Global Load Error:', e); 
+            }
         }
 
         function calculateAge(start) {
