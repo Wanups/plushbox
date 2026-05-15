@@ -429,9 +429,9 @@
 
   <style>
     .nav-shortcut {
-      position: fixed;
-      top: 30px;
-      right: 30px;
+      position: absolute;
+      top: 20px;
+      right: 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -446,6 +446,11 @@
     .nav-shortcut:hover { transform: translateY(-3px); background: rgba(255,255,255,0.08); border-color: var(--silver); }
     .nav-shortcut-icon { font-size: 24px; margin-bottom: 4px; }
     .nav-shortcut-label { font-size: 8px; text-transform: uppercase; letter-spacing: 1px; color: var(--text2); font-weight: 600; }
+
+    @media (max-width: 600px) {
+      .nav-shortcut { top: 10px; right: 10px; padding: 6px; }
+      .nav-shortcut-icon { font-size: 18px; }
+    }
   </style>
 
   <script>
