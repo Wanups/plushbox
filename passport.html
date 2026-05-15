@@ -123,6 +123,12 @@
             letter-spacing: 0.5px; line-height: 1.1;
         }
 
+        /* COVER DESIGN EXACT MATCH */
+        .cover-design { display: flex; flex-direction: column; align-items: center; text-align: center; width: 100%; }
+        .cover-logo { width: 130px; height: 130px; margin-bottom: 25px; fill: var(--accent-color); filter: drop-shadow(4px 4px 0px rgba(0,0,0,0.3)); }
+        .passport-title { font-size: 32px; font-weight: 900; color: white; text-shadow: 4px 4px 0px #1a1a1a; margin: 0; text-transform: uppercase; max-width: 90%; overflow: hidden; text-overflow: ellipsis; }
+        .passport-subtitle { font-size: 18px; font-weight: 700; color: var(--accent-color); margin-top: 5px; letter-spacing: 4px; }
+
         /* ID PAGE NEW LAYOUT */
         .id-page { display: flex; flex-direction: column; height: 100%; padding: 5px; justify-content: space-around; }
         .id-header { text-align: center; border-bottom: 2px solid #1a1a1a; padding-bottom: 5px; margin-bottom: 5px; }
@@ -325,29 +331,23 @@
                 const timestamp = Date.now();
                 const baseUrl = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main/`;
 
-                // 1. Charger les collections
                 const resCollections = await fetch(`${baseUrl}${GITHUB_FILE}?t=${timestamp}`);
                 if (resCollections.ok) {
                     allCollections = await resCollections.json();
                     stamps = allCollections[username] || [];
                 }
 
-                // 2. Charger les jeux connus (pour le %)
-                // On utilise un try/catch spécifique pour que si le fichier n'existe pas encore, ça ne bloque pas tout
                 try {
                     const resKnown = await fetch(`${baseUrl}passport_known_games.json?t=${timestamp}`);
                     if (resKnown.ok) {
                         knownGames = await resKnown.json();
                     } else {
-                        console.warn("Fichier passport_known_games.json introuvable (404)");
                         knownGames = [];
                     }
                 } catch(err) {
-                    console.warn("Erreur lors du fetch de known_games:", err);
                     knownGames = [];
                 }
 
-                // 3. Infos Twitch
                 try {
                     const ivr = await fetch(`https://api.ivr.fi/v2/twitch/user?login=${username}`);
                     const ivrData = await ivr.json();
@@ -373,8 +373,8 @@
 
         function getCollectionPercent(userStamps) {
             if (!knownGames || knownGames.length === 0) return 0;
-            const validStamps = userStamps.filter(s => knownGames.some(g => g.toLowerCase() === s.game.toLowerCase())).length;
-            return Math.round((validStamps / knownGames.length) * 100);
+            const owned = userStamps.filter(s => knownGames.some(g => g.toLowerCase() === s.game.toLowerCase())).length;
+            return Math.round((owned / knownGames.length) * 100);
         }
 
         function getRank(login) {
